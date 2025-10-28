@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaEcomerce", "TiendaEcomerce.csproj", "{5570EFB8-2B06-4F0E-802C-6B16A6A8CEA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dominio", "..\Dominio\Dominio.csproj", "{36D2DE0F-5A4F-407E-BCE3-98234AC2CD5D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5570EFB8-2B06-4F0E-802C-6B16A6A8CEA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5570EFB8-2B06-4F0E-802C-6B16A6A8CEA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5570EFB8-2B06-4F0E-802C-6B16A6A8CEA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5570EFB8-2B06-4F0E-802C-6B16A6A8CEA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36D2DE0F-5A4F-407E-BCE3-98234AC2CD5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36D2DE0F-5A4F-407E-BCE3-98234AC2CD5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36D2DE0F-5A4F-407E-BCE3-98234AC2CD5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36D2DE0F-5A4F-407E-BCE3-98234AC2CD5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7179C93-3756-4D2B-84F8-6E2ED0D8ABD5}
+	EndGlobalSection
+EndGlobal
