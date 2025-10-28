@@ -20,6 +20,7 @@ namespace TiendaEcomerce.Controllers
         }
 
 
+        [HttpGet]
         public IActionResult Registro()
         {
             return View();
