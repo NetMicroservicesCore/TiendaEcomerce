@@ -1,0 +1,373 @@
+﻿
+@{
+    ViewData["Title"] = "Registro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/principal.css" rel="stylesheet" asp-append-version="true" />
+<div class="container">
+    <div class="form-container">
+        <div class="form-header">
+            <h1><i class="fas fa-user-circle"></i> Registro Personal</h1>
+            <p>Complete todos los campos del formulario con información válida</p>
+        </div>
+
+        <form id="personaForm" class="needs-validation" novalidate>
+            <!-- Datos Personales -->
+            <div class="section-title">
+                <i class="fas fa-user"></i> Datos Personales
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="nombre" class="form-label">Nombre(s) *</label>
+                    <input type="text" class="form-control" id="nombre" required
+                           pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}">
+                    <div class="invalid-feedback">
+                        Por favor ingrese un nombre válido (solo letras).
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="apellidoPaterno" class="form-label">
+                        Apellido Paterno *
+                    </label>
+                    <input type="text" class="form-control"
+                           id="apellidoPaterno" required
+                           pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}">
+                    <div class="invalid-feedback">
+                        Por favor ingrese un apellido válido.
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="apellidoMaterno" class="form-label">
+                        Apellido Materno *
+                    </label>
+                    <input type="text" class="form-control"
+                           id="apellidoMaterno" required
+                           pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}">
+                    <div class="invalid-feedback">
+                        Por favor ingrese un apellido válido.
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="foto" class="form-label">Fotografía *</label>
+                    <div class="photo-upload">
+                        <i class="fas fa-camera fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">
+                            Haga clic para seleccionar una fotografía
+                        </p>
+                        <input type="file" class="form-control"
+                               id="foto" accept="image/*" required>
+                        <img id="photoPreview"
+                             class="photo-preview" alt="Vista previa">
+                        <div class="invalid-feedback">
+                            Por favor seleccione una fotografía.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="rfc" class="form-label">RFC *</label>
+                    <input type="text" class="form-control" id="rfc" required
+                           pattern="^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$"
+                           placeholder="AAAA000000AAA"
+                           maxlength="13">
+                    <div class="invalid-feedback">
+                        RFC inválido. Formato: 4 letras, 6 dígitos,
+                        3 caracteres alfanuméricos.
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="curp" class="form-label">CURP *</label>
+                    <input type="text" class="form-control" id="curp" required
+                           pattern="^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[0-9]{2}$"
+                           placeholder="AAAA000000HAAAAA00"
+                           maxlength="18">
+                    <div class="invalid-feedback">
+                        CURP inválido. Formato: 4 letras, 6 dígitos,
+                        H/M, 5 letras, 2 dígitos.
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="fechaNacimiento" class="form-label">
+                        Fecha de Nacimiento *
+                    </label>
+                    <input type="date" class="form-control"
+                           id="fechaNacimiento" required>
+                    <div class="invalid-feedback">
+                        Por favor ingrese su fecha de nacimiento.
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="edad" class="form-label">Edad *</label>
+                    <input type="number" class="form-control" id="edad" required
+                           min="18" max="120" readonly>
+                    <div class="invalid-feedback">
+                        La edad debe ser mayor a 18 años.
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="nacionalidad" class="form-label">
+                        Nacionalidad *
+                    </label>
+                    <select class="form-select" id="nacionalidad" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Mexicana">Mexicana</option>
+                        <option value="Estadounidense">Estadounidense</option>
+                        <option value="Canadiense">Canadiense</option>
+                        <option value="Española">Española</option>
+                        <option value="Otra">Otra</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Por favor seleccione su nacionalidad.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dirección -->
+            <div class="section-title">
+                <i class="fas fa-map-marker-alt"></i> Dirección
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="calle" class="form-label">Calle *</label>
+                    <input type="text" class="form-control" id="calle" required>
+                    <div class="invalid-feedback">
+                        Por favor ingrese la calle.
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="colonia" class="form-label">Colonia *</label>
+                    <input type="text" class="form-control" id="colonia" required>
+                    <div class="invalid-feedback">
+                        Por favor ingrese la colonia.
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="numeroExterior" class="form-label">Número Exterior *</label>
+                    <input type="text" class="form-control" id="numeroExterior" required>
+                    <div class="invalid-feedback">
+                        Por favor ingrese el número exterior.
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="numeroInterior" class="form-label">Número Interior</label>
+                    <input type="text" class="form-control" id="numeroInterior">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="codigoPostal" class="form-label">Código Postal *</label>
+                    <input type="text" class="form-control" id="codigoPostal" required
+                           pattern="[0-9]{5}" maxlength="5">
+                    <div class="invalid-feedback">
+                        Ingrese un código postal válido (5 dígitos).
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contacto -->
+            <div class="section-title">
+                <i class="fas fa-phone"></i> Información de Contacto
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="telefonoCelular" class="form-label">Teléfono Celular *</label>
+                    <input type="tel" class="form-control" id="telefonoCelular" required
+                           pattern="[0-9]{10}" maxlength="10" placeholder="10 dígitos">
+                    <div class="invalid-feedback">
+                        Ingrese un número celular válido (10 dígitos).
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="telefonoCasa" class="form-label">Teléfono de Casa</label>
+                    <input type="tel" class="form-control" id="telefonoCasa"
+                           pattern="[0-9]{10}" maxlength="10" placeholder="10 dígitos">
+                    <div class="invalid-feedback">
+                        Ingrese un número telefónico válido (10 dígitos).
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="email" class="form-label">Email *</label>
+                    <input type="email" class="form-control" id="email" required>
+                    <div class="invalid-feedback">
+                        Por favor ingrese un email válido.
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="reset" class="btn btn-secondary">
+                    <i class="fas fa-undo"></i> Limpiar
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Enviar Formulario
+                </button>
+            </div>
+
+            <div class="alert alert-success success-message" role="alert">
+                <h5 class="alert-heading"><i class="fas fa-check-circle"></i> ¡Formulario enviado exitosamente!</h5>
+                <p class="mb-0">Los datos han sido serializados en formato JSON.</p>
+                <hr>
+                <pre id="jsonOutput" style="background: #f8f9fa; padding: 15px; border-radius: 5px; max-height: 300px; overflow-y: auto;"></pre>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Objeto Persona para encapsular los datos
+    class Persona {
+        constructor(datos) {
+            this.nombre = datos.nombre;
+            this.apellidoPaterno = datos.apellidoPaterno;
+            this.apellidoMaterno = datos.apellidoMaterno;
+            this.foto = datos.foto;
+            this.rfc = datos.rfc;
+            this.curp = datos.curp;
+            this.edad = datos.edad;
+            this.fechaNacimiento = datos.fechaNacimiento;
+            this.nacionalidad = datos.nacionalidad;
+            this.direccion = {
+                calle: datos.calle,
+                colonia: datos.colonia,
+                numeroInterior: datos.numeroInterior,
+                numeroExterior: datos.numeroExterior,
+                codigoPostal: datos.codigoPostal
+            };
+            this.contacto = {
+                telefonoCelular: datos.telefonoCelular,
+                telefonoCasa: datos.telefonoCasa,
+                email: datos.email
+            };
+        }
+
+        toJSON() {
+            return JSON.stringify(this, null, 2);
+        }
+    }
+
+    // Calcular edad automáticamente
+    document.getElementById('fechaNacimiento').addEventListener('change', function() {
+        const fechaNacimiento = new Date(this.value);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+        const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+            edad--;
+        }
+
+        document.getElementById('edad').value = edad;
+    });
+
+    // Vista previa de la foto
+    document.getElementById('foto').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('photoPreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Convertir RFC y CURP a mayúsculas automáticamente
+    document.getElementById('rfc').addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+    });
+
+    document.getElementById('curp').addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+    });
+
+    // Validación y envío del formulario
+    (function() {
+        'use strict';
+
+        const form = document.getElementById('personaForm');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (form.checkValidity()) {
+                // Recopilar datos del formulario
+                const fotoInput = document.getElementById('foto');
+                const fotoBase64 = document.getElementById('photoPreview').src;
+
+                const datosFormulario = {
+                    nombre: document.getElementById('nombre').value,
+                    apellidoPaterno: document.getElementById('apellidoPaterno').value,
+                    apellidoMaterno: document.getElementById('apellidoMaterno').value,
+                    foto: fotoBase64,
+                    rfc: document.getElementById('rfc').value,
+                    curp: document.getElementById('curp').value,
+                    edad: parseInt(document.getElementById('edad').value),
+                    fechaNacimiento: document.getElementById('fechaNacimiento').value,
+                    nacionalidad: document.getElementById('nacionalidad').value,
+                    calle: document.getElementById('calle').value,
+                    colonia: document.getElementById('colonia').value,
+                    numeroInterior: document.getElementById('numeroInterior').value,
+                    numeroExterior: document.getElementById('numeroExterior').value,
+                    codigoPostal: document.getElementById('codigoPostal').value,
+                    telefonoCelular: document.getElementById('telefonoCelular').value,
+                    telefonoCasa: document.getElementById('telefonoCasa').value,
+                    email: document.getElementById('email').value
+                };
+
+                // Crear instancia de Persona
+                const persona = new Persona(datosFormulario);
+
+                // Serializar a JSON
+                const jsonPersona = persona.toJSON();
+
+                // Mostrar resultado
+                document.getElementById('jsonOutput').textContent = jsonPersona;
+                document.querySelector('.success-message').style.display = 'block';
+
+                // Scroll hacia el mensaje de éxito
+                document.querySelector('.success-message').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
+                });
+
+                console.log('Datos serializados:', jsonPersona);
+
+                // Aquí podrías enviar los datos a un servidor podemos utilizar mongo atlas, pero necesitamos una api
+                // fetch('/api/persona', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: jsonPersona
+                // });
+            }
+
+            form.classList.add('was-validated');
+        }, false);
+
+        // Resetear validación al limpiar
+        form.addEventListener('reset', function() {
+            form.classList.remove('was-validated');
+            document.querySelector('.success-message').style.display = 'none';
+            document.getElementById('photoPreview').style.display = 'none';
+            document.getElementById('edad').value = '';
+        });
+    })();
+</script>
+

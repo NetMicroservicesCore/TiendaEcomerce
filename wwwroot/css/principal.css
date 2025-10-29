@@ -1,0 +1,124 @@
+﻿/*:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #3498db;
+}*/
+
+body {
+    /*background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);padding: 40px 0;*/
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+    .form-header h1 {
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .form-header p {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+
+.section-title {
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+    .section-title i {
+        color: var(--accent-color);
+        margin-right: 10px;
+    }
+
+.form-label {
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin-bottom: 8px;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.15);
+    }
+
+.photo-upload {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+    .photo-upload:hover {
+        border-color: var(--accent-color);
+        background: #e9f4fb;
+    }
+
+.photo-preview {
+    max-width: 200px;
+    max-height: 200px;
+    margin: 15px auto;
+    border-radius: 8px;
+    display: none;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    border: none;
+    padding: 12px 40px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    }
+
+.btn-secondary {
+    padding: 12px 40px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.invalid-feedback {
+    font-size: 0.875rem;
+}
+
+.success-message {
+    display: none;
+    margin-top: 20px;
+}
