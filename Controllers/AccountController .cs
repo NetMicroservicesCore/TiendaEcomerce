@@ -27,6 +27,8 @@ namespace TiendaEcomerce.Controllers
             _roleManager = roleManager;
         }
 
+        #region Registro de Usuarios
+
         [HttpGet]
         public IActionResult Registro() => View();
 
@@ -36,13 +38,13 @@ namespace TiendaEcomerce.Controllers
             if (!ModelState.IsValid) return View(model);
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager!.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 // enviar email confirmación
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var confirmLink = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token }, Request.Scheme);
-                await _emailSender.SendEmailAsync(user.Email, "Confirm your email", $"Por favor confirma tu cuenta <a href=\"{confirmLink}\">aquí</a>.");
+                await _emailSender!.SendEmailAsync(user.Email, "Confirm your email", $"Por favor confirma tu cuenta <a href=\"{confirmLink}\">aquí</a>.");
                 // opcional: asignar rol default
                 await _userManager.AddToRoleAsync(user, "User");
                 return RedirectToAction("RegisterConfirmation");
@@ -51,15 +53,9 @@ namespace TiendaEcomerce.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        {
-            if (userId == null || token == null) return RedirectToAction("Index", "Home");
-            var user = await _userManager!.FindByIdAsync(userId);
-            if (user == null) return NotFound();
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
+        #endregion
+
+        #region Login de Acceso a Usuarios
 
         [HttpGet]
         public IActionResult Login(string returnUrl = null) => View(new LoginViewModel { ReturnUrl = returnUrl });
@@ -87,7 +83,33 @@ namespace TiendaEcomerce.Controllers
             await _signInManager!.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        #endregion
 
+        #region  Confirmacion de Correo
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null) return RedirectToAction("Index", "Home");
+            var user = await _userManager!.FindByIdAsync(userId);
+            if (user == null) return NotFound();
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+        }
+        #endregion
+
+
+        #region External Login
+        // External login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
+            var properties = _signInManager!.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+        #endregion
 
     }
 }
