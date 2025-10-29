@@ -1,0 +1,307 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Acceso</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+        }
+        .auth-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .auth-body {
+            padding: 2rem;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #653a8a 100%);
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .divider span {
+            padding: 0 10px;
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        .view-link {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .view-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card mx-auto">
+            <!-- Vista de Login -->
+            <div id="loginView">
+                <div class="auth-header">
+                    <i class="bi bi-person-circle fs-1"></i>
+                    <h3 class="mt-2 mb-0">Iniciar Sesión</h3>
+                </div>
+                <div class="auth-body">
+                    <form id="loginForm" novalidate>
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Correo electrónico</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control" id="loginEmail" placeholder="usuario@ejemplo.com" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un correo electrónico válido.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu contraseña.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">
+                                Recordarme
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                        </button>
+                        <div class="text-center">
+                            <a class="view-link d-block mb-2" onclick="showView('recover')">¿Olvidaste tu contraseña?</a>
+                            <div class="divider"><span>o</span></div>
+                            <p class="mb-0">¿No tienes cuenta? <a class="view-link" onclick="showView('register')">Regístrate aquí</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Vista de Registro -->
+            <div id="registerView" style="display: none;">
+                <div class="auth-header">
+                    <i class="bi bi-person-plus-fill fs-1"></i>
+                    <h3 class="mt-2 mb-0">Crear Cuenta</h3>
+                </div>
+                <div class="auth-body">
+                    <form id="registerForm" novalidate>
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nombre completo</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control" id="registerName" placeholder="Juan Pérez" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu nombre completo.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Correo electrónico</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control" id="registerEmail" placeholder="usuario@ejemplo.com" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un correo electrónico válido.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" class="form-control" id="registerPassword" placeholder="Mínimo 8 caracteres" minlength="8" required>
+                                <div class="invalid-feedback">
+                                    La contraseña debe tener al menos 8 caracteres.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPasswordConfirm" class="form-label">Confirmar contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                <input type="password" class="form-control" id="registerPasswordConfirm" placeholder="Repite tu contraseña" required>
+                                <div class="invalid-feedback">
+                                    Las contraseñas no coinciden.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="acceptTerms" required>
+                            <label class="form-check-label" for="acceptTerms">
+                                Acepto los términos y condiciones
+                            </label>
+                            <div class="invalid-feedback">
+                                Debes aceptar los términos y condiciones.
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="bi bi-check-circle"></i> Crear Cuenta
+                        </button>
+                        <div class="text-center">
+                            <p class="mb-0">¿Ya tienes cuenta? <a class="view-link" onclick="showView('login')">Inicia sesión aquí</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Vista de Recuperación -->
+            <div id="recoverView" style="display: none;">
+                <div class="auth-header">
+                    <i class="bi bi-key-fill fs-1"></i>
+                    <h3 class="mt-2 mb-0">Recuperar Contraseña</h3>
+                </div>
+                <div class="auth-body">
+                    <p class="text-muted mb-4">Ingresa tu correo electrónico y te enviaremos instrucciones para restablecer tu contraseña.</p>
+                    <form id="recoverForm" novalidate>
+                        <div class="mb-3">
+                            <label for="recoverEmail" class="form-label">Correo electrónico</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control" id="recoverEmail" placeholder="usuario@ejemplo.com" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa un correo electrónico válido.
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="bi bi-send"></i> Enviar Instrucciones
+                        </button>
+                        <div class="text-center">
+                            <a class="view-link" onclick="showView('login')"><i class="bi bi-arrow-left"></i> Volver al inicio de sesión</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Función para cambiar entre vistas
+        function showView(view) {
+            document.getElementById('loginView').style.display = 'none';
+            document.getElementById('registerView').style.display = 'none';
+            document.getElementById('recoverView').style.display = 'none';
+
+            if (view === 'login') {
+                document.getElementById('loginView').style.display = 'block';
+            } else if (view === 'register') {
+                document.getElementById('registerView').style.display = 'block';
+            } else if (view === 'recover') {
+                document.getElementById('recoverView').style.display = 'block';
+            }
+        }
+
+        // Validación del formulario de login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!this.checkValidity()) {
+                e.stopPropagation();
+                this.classList.add('was-validated');
+            } else {
+                alert('¡Inicio de sesión exitoso! (Simulación)');
+                this.classList.remove('was-validated');
+                this.reset();
+            }
+        });
+
+        // Validación del formulario de registro
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerPasswordConfirm').value;
+            const confirmInput = document.getElementById('registerPasswordConfirm');
+
+            // Validar que las contraseñas coincidan
+            if (password !== confirmPassword) {
+                confirmInput.setCustomValidity('Las contraseñas no coinciden');
+            } else {
+                confirmInput.setCustomValidity('');
+            }
+
+            if (!this.checkValidity()) {
+                e.stopPropagation();
+                this.classList.add('was-validated');
+            } else {
+                alert('¡Cuenta creada exitosamente! (Simulación)');
+                this.classList.remove('was-validated');
+                this.reset();
+                showView('login');
+            }
+        });
+
+        // Validación del formulario de recuperación
+        document.getElementById('recoverForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!this.checkValidity()) {
+                e.stopPropagation();
+                this.classList.add('was-validated');
+            } else {
+                alert('¡Instrucciones enviadas a tu correo! (Simulación)');
+                this.classList.remove('was-validated');
+                this.reset();
+                showView('login');
+            }
+        });
+
+        // Validación en tiempo real para las contraseñas
+        document.getElementById('registerPasswordConfirm').addEventListener('input', function() {
+            const password = document.getElementById('registerPassword').value;
+            if (this.value !== password) {
+                this.setCustomValidity('Las contraseñas no coinciden');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+</body>
+</html>
