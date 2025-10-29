@@ -1,0 +1,432 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Datos de Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/registro.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <i class="bi bi-person-vcard fs-1"></i>
+                <h3 class="mt-2 mb-1">Registro de Datos de Usuario</h3>
+                <p class="mb-0 opacity-75">Complete todos los campos requeridos</p>
+            </div>
+
+            <div class="form-body">
+                <!-- Indicador de progreso -->
+                <div class="progress-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">Información Personal</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">Contacto</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Dirección</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-circle">4</div>
+                        <div class="step-label">Confirmación</div>
+                    </div>
+                </div>
+
+                <form id="userDataForm" novalidate>
+                    <!-- Sección 1: Información Personal -->
+                    <div class="form-section active" data-section="1">
+                        <h5 class="section-title"><i class="bi bi-person-badge"></i> Información Personal</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label required-field">Nombre(s)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="firstName" placeholder="Juan" required>
+                                    <div class="invalid-feedback">Por favor ingresa tu nombre.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label required-field">Apellidos</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="lastName" placeholder="Pérez García" required>
+                                    <div class="invalid-feedback">Por favor ingresa tus apellidos.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="birthDate" class="form-label required-field">Fecha de Nacimiento</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                                    <input type="date" class="form-control" id="birthDate" required>
+                                    <div class="invalid-feedback">Por favor selecciona tu fecha de nacimiento.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="gender" class="form-label required-field">Género</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+                                    <select class="form-select" id="gender" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="femenino">Femenino</option>
+                                        <option value="otro">Otro</option>
+                                        <option value="prefiero-no-decir">Prefiero no decir</option>
+                                    </select>
+                                    <div class="invalid-feedback">Por favor selecciona tu género.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nationality" class="form-label required-field">Nacionalidad</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-flag"></i></span>
+                                    <input type="text" class="form-control" id="nationality" placeholder="Mexicana" required>
+                                    <div class="invalid-feedback">Por favor ingresa tu nacionalidad.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="idNumber" class="form-label required-field">Número de Identificación</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                    <input type="text" class="form-control" id="idNumber" placeholder="CURP, RFC, etc." required>
+                                    <div class="invalid-feedback">Por favor ingresa tu número de identificación.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 2: Información de Contacto -->
+                    <div class="form-section" data-section="2">
+                        <h5 class="section-title"><i class="bi bi-envelope"></i> Información de Contacto</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label required-field">Correo Electrónico</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" placeholder="usuario@ejemplo.com" required>
+                                    <div class="invalid-feedback">Por favor ingresa un correo válido.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="emailConfirm" class="form-label required-field">Confirmar Correo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope-check"></i></span>
+                                    <input type="email" class="form-control" id="emailConfirm" placeholder="usuario@ejemplo.com" required>
+                                    <div class="invalid-feedback">Los correos no coinciden.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label required-field">Teléfono</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                    <input type="tel" class="form-control" id="phone" placeholder="(555) 123-4567" pattern="[0-9]{10}" required>
+                                    <div class="invalid-feedback">Por favor ingresa un teléfono válido (10 dígitos).</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phoneAlt" class="form-label">Teléfono Alternativo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-phone"></i></span>
+                                    <input type="tel" class="form-control" id="phoneAlt" placeholder="(555) 987-6543" pattern="[0-9]{10}">
+                                    <div class="invalid-feedback">Por favor ingresa un teléfono válido (10 dígitos).</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contactPreference" class="form-label required-field">Preferencia de Contacto</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-chat-dots"></i></span>
+                                <select class="form-select" id="contactPreference" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="email">Correo Electrónico</option>
+                                    <option value="phone">Teléfono</option>
+                                    <option value="whatsapp">WhatsApp</option>
+                                    <option value="sms">SMS</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecciona una preferencia de contacto.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 3: Dirección -->
+                    <div class="form-section" data-section="3">
+                        <h5 class="section-title"><i class="bi bi-geo-alt"></i> Dirección</h5>
+
+                        <div class="mb-3">
+                            <label for="street" class="form-label required-field">Calle y Número</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-signpost"></i></span>
+                                <input type="text" class="form-control" id="street" placeholder="Av. Principal #123" required>
+                                <div class="invalid-feedback">Por favor ingresa tu dirección.</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="neighborhood" class="form-label required-field">Colonia</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-building"></i></span>
+                                    <input type="text" class="form-control" id="neighborhood" placeholder="Centro" required>
+                                    <div class="invalid-feedback">Por favor ingresa tu colonia.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="postalCode" class="form-label required-field">Código Postal</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-mailbox"></i></span>
+                                    <input type="text" class="form-control" id="postalCode" placeholder="12345" pattern="[0-9]{5}" required>
+                                    <div class="invalid-feedback">Por favor ingresa un código postal válido (5 dígitos).</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="city" class="form-label required-field">Ciudad</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-geo"></i></span>
+                                    <input type="text" class="form-control" id="city" placeholder="Ciudad de México" required>
+                                    <div class="invalid-feedback">Por favor ingresa tu ciudad.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="state" class="form-label required-field">Estado</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-map"></i></span>
+                                    <input type="text" class="form-control" id="state" placeholder="CDMX" required>
+                                    <div class="invalid-feedback">Por favor ingresa tu estado.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="country" class="form-label required-field">País</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-globe"></i></span>
+                                    <input type="text" class="form-control" id="country" placeholder="México" value="México" required>
+                                    <div class="invalid-feedback">Por favor ingresa tu país.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="addressNotes" class="form-label">Referencias Adicionales</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                <textarea class="form-control" id="addressNotes" rows="2" placeholder="Entre calles, puntos de referencia..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 4: Confirmación -->
+                    <div class="form-section" data-section="4">
+                        <h5 class="section-title"><i class="bi bi-check-circle"></i> Confirmación de Datos</h5>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Por favor revisa que todos tus datos sean correctos antes de enviar el formulario.
+                        </div>
+
+                        <div id="summaryData" class="mb-3">
+                            <!-- Aquí se mostrará el resumen de datos -->
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="confirmData" required>
+                            <label class="form-check-label" for="confirmData">
+                                Confirmo que todos los datos ingresados son correctos y verdaderos
+                            </label>
+                            <div class="invalid-feedback">Debes confirmar que los datos son correctos.</div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="acceptPrivacy" required>
+                            <label class="form-check-label" for="acceptPrivacy">
+                                Acepto el <a href="#" class="text-decoration-none">Aviso de Privacidad</a> y autorizo el tratamiento de mis datos personales
+                            </label>
+                            <div class="invalid-feedback">Debes aceptar el aviso de privacidad.</div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de navegación -->
+                    <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                        <button type="button" class="btn btn-secondary" id="btnPrev" style="display: none;">
+                            <i class="bi bi-arrow-left"></i> Anterior
+                        </button>
+                        <div></div>
+                        <button type="button" class="btn btn-primary" id="btnNext">
+                            Siguiente <i class="bi bi-arrow-right"></i>
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmit" style="display: none;">
+                            <i class="bi bi-check-lg"></i> Enviar Registro
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        // Función para cambiar de paso
+        function goToStep(step) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Mostrar la sección actual
+            document.querySelector(`[data-section="${step}"]`).classList.add('active');
+
+            // Actualizar indicadores de paso
+            document.querySelectorAll('.step').forEach((stepEl, index) => {
+                const stepNum = index + 1;
+                stepEl.classList.remove('active', 'completed');
+
+                if (stepNum < step) {
+                    stepEl.classList.add('completed');
+                } else if (stepNum === step) {
+                    stepEl.classList.add('active');
+                }
+            });
+
+            // Actualizar botones
+            document.getElementById('btnPrev').style.display = step === 1 ? 'none' : 'inline-block';
+            document.getElementById('btnNext').style.display = step === totalSteps ? 'none' : 'inline-block';
+            document.getElementById('btnSubmit').style.display = step === totalSteps ? 'inline-block' : 'none';
+
+            // Si estamos en el último paso, mostrar resumen
+            if (step === totalSteps) {
+                showSummary();
+            }
+
+            currentStep = step;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Validar sección actual
+        function validateCurrentSection() {
+            const currentSection = document.querySelector(`[data-section="${currentStep}"]`);
+            const inputs = currentSection.querySelectorAll('input[required], select[required], textarea[required]');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    isValid = false;
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                    input.classList.add('is-valid');
+                }
+            });
+
+            return isValid;
+        }
+
+        // Mostrar resumen de datos
+        function showSummary() {
+            const summary = document.getElementById('summaryData');
+            const html = `
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-3 text-muted"><i class="bi bi-person-badge"></i> Información Personal</h6>
+                        <p class="mb-1"><strong>Nombre completo:</strong> ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}</p>
+                        <p class="mb-1"><strong>Fecha de nacimiento:</strong> ${document.getElementById('birthDate').value}</p>
+                        <p class="mb-1"><strong>Género:</strong> ${document.getElementById('gender').value}</p>
+                        <p class="mb-1"><strong>Nacionalidad:</strong> ${document.getElementById('nationality').value}</p>
+                        <p class="mb-3"><strong>Identificación:</strong> ${document.getElementById('idNumber').value}</p>
+
+                        <h6 class="card-subtitle mb-3 text-muted"><i class="bi bi-envelope"></i> Contacto</h6>
+                        <p class="mb-1"><strong>Email:</strong> ${document.getElementById('email').value}</p>
+                        <p class="mb-1"><strong>Teléfono:</strong> ${document.getElementById('phone').value}</p>
+                        ${document.getElementById('phoneAlt').value ? `<p class="mb-1"><strong>Teléfono alternativo:</strong> ${document.getElementById('phoneAlt').value}</p>` : ''}
+                        <p class="mb-3"><strong>Preferencia de contacto:</strong> ${document.getElementById('contactPreference').value}</p>
+
+                        <h6 class="card-subtitle mb-3 text-muted"><i class="bi bi-geo-alt"></i> Dirección</h6>
+                        <p class="mb-1"><strong>Dirección:</strong> ${document.getElementById('street').value}</p>
+                        <p class="mb-1"><strong>Colonia:</strong> ${document.getElementById('neighborhood').value}, CP ${document.getElementById('postalCode').value}</p>
+                        <p class="mb-1"><strong>Ciudad:</strong> ${document.getElementById('city').value}, ${document.getElementById('state').value}</p>
+                        <p class="mb-0"><strong>País:</strong> ${document.getElementById('country').value}</p>
+                    </div>
+                </div>
+            `;
+            summary.innerHTML = html;
+        }
+
+        // Botón Siguiente
+        document.getElementById('btnNext').addEventListener('click', function() {
+            if (validateCurrentSection()) {
+                if (currentStep < totalSteps) {
+                    goToStep(currentStep + 1);
+                }
+            }
+        });
+
+        // Botón Anterior
+        document.getElementById('btnPrev').addEventListener('click', function() {
+            if (currentStep > 1) {
+                goToStep(currentStep - 1);
+            }
+        });
+
+        // Validación de correos coincidentes
+        document.getElementById('emailConfirm').addEventListener('input', function() {
+            const email = document.getElementById('email').value;
+            if (this.value !== email) {
+                this.setCustomValidity('Los correos no coinciden');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        // Enviar formulario
+        document.getElementById('userDataForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!this.checkValidity()) {
+                e.stopPropagation();
+                this.classList.add('was-validated');
+            } else {
+                // Simular envío exitoso
+                alert('¡Registro completado exitosamente!\n\nTus datos han sido guardados correctamente.');
+                this.reset();
+                this.classList.remove('was-validated');
+                goToStep(1);
+            }
+        });
+
+        // Validación en tiempo real para remover mensajes de error
+        document.querySelectorAll('input, select, textarea').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.checkValidity()) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
