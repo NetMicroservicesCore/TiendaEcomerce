@@ -5,7 +5,7 @@ using TiendaEcomerce.Models;
 
 namespace TiendaEcomerce.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
