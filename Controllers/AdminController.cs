@@ -43,6 +43,7 @@ namespace TiendaEcomerce.Controllers
         }
         public IActionResult Index()
         {
+            string variable = "Hola";
             return View();
         }
     }

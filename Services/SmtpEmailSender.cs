@@ -10,7 +10,8 @@ namespace TiendaEcomerce.Services
         private readonly IConfiguration _config;
         public SmtpEmailSender(IConfiguration config) => _config = config;
 
-        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        public async Task SendEmailAsync(string email, 
+            string subject, string htmlMessage)
         {
             var host = _config["Smtp:Host"];
             var port = int.Parse(_config["Smtp:Port"] ?? "587");
@@ -23,8 +24,8 @@ namespace TiendaEcomerce.Services
                 Credentials = new NetworkCredential(user, pass),
                 EnableSsl = true
             };
-
-            var mail = new MailMessage(from, email, subject, htmlMessage) { IsBodyHtml = true };
+            var mail = new MailMessage(from, email, subject, htmlMessage) 
+            { IsBodyHtml = true };
             await client.SendMailAsync(mail);
         }
     }

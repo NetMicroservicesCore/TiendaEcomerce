@@ -5,7 +5,8 @@ namespace TiendaEcomerce.Extensions
 {
     public static class IdentityDataInitializer
     {
-        public static async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider, IConfiguration configuration)
+        public static async Task SeedRolesAndAdminAsync(
+            IServiceProvider serviceProvider, IConfiguration configuration)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -22,7 +23,8 @@ namespace TiendaEcomerce.Extensions
             var adminEmail = configuration["Seed:AdminEmail"];
             var adminPassword = configuration["Seed:AdminPassword"];
 
-            if (string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+            if (string.IsNullOrWhiteSpace(adminEmail) ||
+                string.IsNullOrWhiteSpace(adminPassword))
                 return; // no seed si no hay credenciales
 
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
@@ -37,7 +39,8 @@ namespace TiendaEcomerce.Extensions
                     LastName = "Admin"
                 };
 
-                var result = await userManager.CreateAsync(adminUser, adminPassword);
+                var result = await userManager
+                    .CreateAsync(adminUser, adminPassword);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
@@ -45,7 +48,8 @@ namespace TiendaEcomerce.Extensions
                 else
                 {
                     // loguear errores - preferible con ILogger
-                    throw new Exception($"Error creando usuario admin: {string.Join(',', result.Errors)}");
+                    throw new Exception($"Error creando usuario admin:" +
+                        $" {string.Join(',', result.Errors)}");
                 }
             }
         }
