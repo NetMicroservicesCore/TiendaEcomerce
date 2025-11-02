@@ -23,6 +23,12 @@ namespace TiendaEcomerce.Controllers
             var users = _userManager.Users.ToList();
             return View(users);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AddRoles() {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddRole(string userId, string role)
         {
