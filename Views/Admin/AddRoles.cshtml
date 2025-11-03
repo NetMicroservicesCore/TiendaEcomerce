@@ -94,12 +94,12 @@
                                     <td>@role.CreatedDate.ToString("dd/MM/yyyy")</td>
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="Editar"
+                                            <button type="button" class="btn btn-outline-primary btn-sm" title="Editar"
                                                     data-bs-target="#editModal" data-bs-toggle="modal"
                                                     onclick="loadEditModal('@role.Id', '@role.Name', '@role.Description', @role.IsActive.ToString().ToLower())">
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
-                                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" title="Eliminar"
+                                            <button type="button" class="btn btn-outline-danger btn-sm" title="Eliminar"
                                                     data-bs-target="#deleteModal" data-bs-toggle="modal"
                                                     onclick="loadDeleteModal('@role.Id', '@role.Name')">
                                                 <i class="bi bi-trash"></i>
