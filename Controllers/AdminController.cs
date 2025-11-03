@@ -30,12 +30,12 @@ namespace TiendaEcomerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRole(string userId, string role)
+        public async Task<IActionResult> AddRole(string userId, string Name)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();
-            if (!await _roleManager.RoleExistsAsync(role)) await _roleManager.CreateAsync(new IdentityRole(role));
-            await _userManager.AddToRoleAsync(user, role);
+            if (!await _roleManager.RoleExistsAsync(Name)) await _roleManager.CreateAsync(new IdentityRole(Name));
+            await _userManager.AddToRoleAsync(user, Name);
             return RedirectToAction("Users");
         }
 
@@ -53,6 +53,21 @@ namespace TiendaEcomerce.Controllers
             return View();
         }
 
+        #region Create Roles
+        [HttpPost]
+        public async Task<IActionResult> Create(string Name)
+        {
+            if (User.Identity!.IsAuthenticated)
+            {
+                if (!await _roleManager.RoleExistsAsync(Name))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(Name));
+                }
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Login");
+        }
+        #endregion
 
         #region Implementacion de Vistas Parciales
         [HttpPost]
