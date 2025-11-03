@@ -1,0 +1,15 @@
+﻿.form-control.is-valid {
+    border-color: #198754 !important;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.card {
+    transition: all 0.2s ease-in-out;
+}
+
+    .card:hover {
+        transform: scale(1.01);
+    }

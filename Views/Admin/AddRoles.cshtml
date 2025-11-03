@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Administración de Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container py-4">
@@ -182,24 +183,6 @@
     </script>
 }
 
-@section Styles {
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
-    <style>
-        .form-control.is-valid {
-            border-color: #198754 !important;
-        }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+<link href="~/css/validation-site.css" rel="stylesheet" />
 
-        .form-control.is-invalid {
-            border-color: #dc3545 !important;
-        }
-
-        .card {
-            transition: all 0.2s ease-in-out;
-        }
-
-            .card:hover {
-                transform: scale(1.01);
-            }
-    </style>
-}
-}

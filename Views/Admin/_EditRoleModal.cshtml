@@ -1,0 +1,47 @@
+﻿@model RoleViewModel
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="editModalLabel">
+                    <i class="bi bi-pencil-square me-2"></i>Editar Rol
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <form asp-action="Edit" asp-controller="Roles" method="post" novalidate>
+                <div class="modal-body">
+                    <input type="hidden" id="editRoleId" name="Id" />
+
+                    <div class="mb-3">
+                        <label for="editRoleName" class="form-label fw-semibold">Nombre del Rol</label>
+                        <input type="text" class="form-control" id="editRoleName" name="Name" required minlength="3" maxlength="50" />
+                        <div class="invalid-feedback">
+                            El nombre del rol es obligatorio.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editRoleDescription" class="form-label fw-semibold">Descripción</label>
+                        <textarea class="form-control" id="editRoleDescription" name="Description" rows="2" maxlength="200"></textarea>
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="editRoleActive" name="IsActive" />
+                        <label class="form-check-label fw-semibold" for="editRoleActive">Rol Activo</label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i>Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
