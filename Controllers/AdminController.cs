@@ -52,5 +52,28 @@ namespace TiendaEcomerce.Controllers
             string variable = "Hola";
             return View();
         }
+
+
+        #region Implementacion de Vistas Parciales
+        [HttpPost]
+        public async Task<IActionResult> Edit(RoleViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index");
+
+            // lógica de actualización...
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(RoleViewModel model)
+        {
+            // eliminar el rol
+            return RedirectToAction("Index");
+        }
+
+        #endregion
+
+
     }
 }
