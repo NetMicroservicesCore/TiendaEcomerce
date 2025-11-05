@@ -9,16 +9,16 @@ using TiendaEcomerce.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services para conectar DB
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
+var connectionString = builder.Configuration
+    .GetConnectionString("DefaultConnection")
+    ?? throw new 
+    InvalidOperationException("Connection string 'DefaultConnection' fail ");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
 //Identity con user y roles
-builder.Services.AddIdentity<TiendaEcomerce.Models.ApplicationUser, IdentityRole>(options =>
+builder.Services.AddIdentity<TiendaEcomerce.Models.ApplicationUser,
+    IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
@@ -26,13 +26,10 @@ builder.Services.AddIdentity<TiendaEcomerce.Models.ApplicationUser, IdentityRole
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 10;
     options.Password.RequiredUniqueChars = 4;
-
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
     options.Lockout.AllowedForNewUsers = true;
-
     options.User.RequireUniqueEmail = true;
-
     options.SignIn.RequireConfirmedEmail = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -63,10 +60,8 @@ builder.Services.AddAuthentication()
         fbOptions.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
         fbOptions.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
     });
-
 //Email sender
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
-
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 {
     options.TokenLifespan = TimeSpan.FromHours(3);
@@ -101,5 +96,10 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await IdentityDataInitializer.SeedRolesAndAdminAsync(services, builder.Configuration);
+}
 app.Run();
 

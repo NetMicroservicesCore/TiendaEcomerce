@@ -10,20 +10,20 @@ namespace TiendaEcomerce.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
-
-        public AdminController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AdminController(UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
         }
-
+        #region Usuarios
         public async Task<IActionResult> Users()
         {
             var users = _userManager.Users.ToList();
             return View(users);
         }
-
+        #endregion
+        
         [HttpGet]
         public async Task<IActionResult> AddRoles() {
             return View();

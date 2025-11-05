@@ -9,7 +9,6 @@ namespace TiendaEcomerce.Services
     {
         private readonly IConfiguration _config;
         public SmtpEmailSender(IConfiguration config) => _config = config;
-
         public async Task SendEmailAsync(string email, 
             string subject, string htmlMessage)
         {
@@ -18,7 +17,7 @@ namespace TiendaEcomerce.Services
             var user = _config["Smtp:User"];
             var pass = _config["Smtp:Pass"];
             var from = _config["Smtp:From"];
-
+            
             using var client = new SmtpClient(host, port)
             {
                 Credentials = new NetworkCredential(user, pass),
@@ -30,3 +29,34 @@ namespace TiendaEcomerce.Services
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
