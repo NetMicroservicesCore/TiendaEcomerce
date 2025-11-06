@@ -25,6 +25,7 @@ namespace TiendaEcomerce.Extensions
             if (string.IsNullOrWhiteSpace(adminEmail) ||
                 string.IsNullOrWhiteSpace(adminPassword))
                 return; // no seed si no hay credenciales
+            
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
@@ -34,7 +35,8 @@ namespace TiendaEcomerce.Extensions
                     Email = adminEmail,
                     EmailConfirmed = true, // o false si quieres confirmación por correo
                     FirstName = "System",
-                    LastName = "Admin"
+                    LastName = "Admin",
+                    CreatedAt = DateTime.UtcNow
                 };
                 var result = await userManager
                     .CreateAsync(adminUser, adminPassword);
