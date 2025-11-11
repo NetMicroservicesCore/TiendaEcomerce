@@ -44,9 +44,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http
+    .CookieSecurePolicy.Always;
 });
-
 //Google y Facebook Authentication
 builder.Services.AddAuthentication()
     .AddGoogle(googleOptions =>

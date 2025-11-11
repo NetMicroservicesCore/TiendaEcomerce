@@ -28,7 +28,6 @@ namespace TiendaEcomerce.Controllers
         public async Task<IActionResult> AddRoles() {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> AddRole(string userId, string Name)
         {

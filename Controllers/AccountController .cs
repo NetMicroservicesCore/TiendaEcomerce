@@ -50,7 +50,7 @@ namespace TiendaEcomerce.Controllers
                     _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var confirmLink = Url.Action(nameof(ConfirmEmail), "Account", 
                     new { userId = user.Id, token }, Request.Scheme);
-                await _emailSender!.SendEmailAsync(user.Email, "Confirm your " +
+                await _emailSender!.SendEmailAsync(user.Email,"Confirm your"+
                     "email", $"Por favor confirma tu cuenta " +
                     $"<a href=\"{confirmLink}\">aquí</a>.");
                 // opcional: asignar rol default
@@ -63,25 +63,22 @@ namespace TiendaEcomerce.Controllers
         }
 
         #endregion
-
         #region Login de Acceso a Usuarios
-
         [HttpGet]
         public IActionResult Login(string returnUrl = null) =>
             View(new LoginViewModel { ReturnUrl = returnUrl });
-
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-
             // lockoutOnFailure = true
             var result = await _signInManager!.PasswordSignInAsync(model.Email,
                 model.Password, model.RememberMe, lockoutOnFailure: true);
-
-            if (result.Succeeded) return LocalRedirect(model.ReturnUrl ?? "/");
-            if (result.RequiresTwoFactor) return RedirectToAction(nameof(LoginWith2fa), new { model.ReturnUrl, model.RememberMe });
+            if (result.Succeeded)
+                return LocalRedirect(model.ReturnUrl ?? "/");
+            if (result.RequiresTwoFactor)
+                return RedirectToAction(nameof(LoginWith2fa), new { model.ReturnUrl, model.RememberMe });
             if (result.IsLockedOut) return View("Lockout");
             ModelState.AddModelError("", "Intento de login inválido.");
             return View(model);
