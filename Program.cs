@@ -34,7 +34,6 @@ builder.Services.AddIdentity<TiendaEcomerce.Models.ApplicationUser,
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
-
 //Config cookie
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -52,17 +51,22 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddAuthentication()
     .AddGoogle(googleOptions =>
     {
-        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
-        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+        googleOptions.ClientId = builder
+        .Configuration["Authentication:Google:ClientId"]!;
+        googleOptions.ClientSecret = builder
+        .Configuration["Authentication:Google:ClientSecret"]!;
     })
     .AddFacebook(fbOptions =>
     {
-        fbOptions.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
-        fbOptions.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
+        fbOptions.AppId = builder
+        .Configuration["Authentication:Facebook:AppId"]!;
+        fbOptions.AppSecret = builder
+        .Configuration["Authentication:Facebook:AppSecret"]!;
     });
 //Email sender
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
-builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+builder.Services.Configure<DataProtectionTokenProviderOptions>
+    (options =>
 {
     options.TokenLifespan = TimeSpan.FromHours(3);
 });
@@ -99,7 +103,8 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await IdentityDataInitializer.SeedRolesAndAdminAsync(services, builder.Configuration);
+    await IdentityDataInitializer
+        .SeedRolesAndAdminAsync(services, builder.Configuration);
 }
 app.Run();
 

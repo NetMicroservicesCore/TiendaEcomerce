@@ -12,8 +12,8 @@ using TiendaEcomerce.Data;
 namespace TiendaEcomerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251106054558_modificate_CreateInit")]
-    partial class modificate_CreateInit
+    [Migration("20251110235358_CreateDB_Inicial_V1")]
+    partial class CreateDB_Inicial_V1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,11 +181,9 @@ namespace TiendaEcomerce.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")

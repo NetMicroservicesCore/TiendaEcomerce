@@ -16,8 +16,7 @@ namespace TiendaEcomerce.Services
             var port = int.Parse(_config["Smtp:Port"] ?? "587");
             var user = _config["Smtp:User"];
             var pass = _config["Smtp:Pass"];
-            var from = _config["Smtp:From"];
-            
+            var from = _config["Smtp:From"];            
             using var client = new SmtpClient(host, port)
             {
                 Credentials = new NetworkCredential(user, pass),

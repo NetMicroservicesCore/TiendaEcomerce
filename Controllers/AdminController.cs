@@ -34,7 +34,8 @@ namespace TiendaEcomerce.Controllers
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();
-            if (!await _roleManager.RoleExistsAsync(Name)) await _roleManager.CreateAsync(new IdentityRole(Name));
+            if (!await _roleManager.RoleExistsAsync(Name)) await 
+                    _roleManager.CreateAsync(new IdentityRole(Name));
             await _userManager.AddToRoleAsync(user, Name);
             return RedirectToAction("Users");
         }
