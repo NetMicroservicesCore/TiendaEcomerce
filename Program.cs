@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using TiendaEcomerce.Data;
 using TiendaEcomerce.Extensions;
-using TiendaEcomerce.Models;
 using TiendaEcomerce.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -96,7 +95,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.MapRazorPages();
 
