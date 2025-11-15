@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TiendaEcomerce.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDB_Inicial_V1 : Migration
+    public partial class Initialize_db_v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

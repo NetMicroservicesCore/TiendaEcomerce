@@ -16,7 +16,6 @@ namespace TiendaEcomerce.Controllers
             _signInManager;
         private readonly IEmailSender? _emailSender;
         private readonly RoleManager<IdentityRole>? _roleManager;
-
         public AccountController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
@@ -73,17 +72,17 @@ namespace TiendaEcomerce.Controllers
         {
             if (!ModelState.IsValid) return View(model);
             // lockoutOnFailure = true
-            var result = await _signInManager!.PasswordSignInAsync(model.Email,
-                model.Password, model.RememberMe, lockoutOnFailure: true);
+            var result = await _signInManager!.PasswordSignInAsync(model.Email!,
+                model.Password!, model.RememberMe, lockoutOnFailure: true);
             if (result.Succeeded)
                 return LocalRedirect(model.ReturnUrl ?? "/");
             if (result.RequiresTwoFactor)
-                return RedirectToAction(nameof(LoginWith2fa), new { model.ReturnUrl, model.RememberMe });
+                return RedirectToAction(nameof(LoginWith2fa), 
+                    new { model.ReturnUrl, model.RememberMe });
             if (result.IsLockedOut) return View("Lockout");
             ModelState.AddModelError("", "Intento de login inválido.");
             return View(model);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -111,27 +110,33 @@ namespace TiendaEcomerce.Controllers
         // External login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        public IActionResult ExternalLogin(string provider, 
+            string returnUrl = null)
         {
-            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
-            var properties = _signInManager!.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", 
+                new { ReturnUrl = returnUrl });
+            var properties = _signInManager!
+                .ConfigureExternalAuthenticationProperties(provider,
+                redirectUrl);
             return Challenge(properties, provider);
         }
-
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl =
+            null,
+            string remoteError = null)
         {
             if (remoteError != null) return RedirectToAction(nameof(Login));
-
             var info = await _signInManager!.GetExternalLoginInfoAsync();
             if (info == null) return RedirectToAction(nameof(Login));
-
             // Sign in the user with this external login provider if the user already has a login.
-            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var signInResult = await _signInManager.
+                ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, 
+                isPersistent: false, bypassTwoFactor: true);
             if (signInResult.Succeeded) return LocalRedirect(returnUrl ?? "/");
-
             // If the user does not have an account, then ask the user to create an account.
-            var email = info.Principal.FindFirstValue(System.Security.Claims.ClaimTypes.Email);
-            var user = new ApplicationUser { UserName = email, Email = email, EmailConfirmed = true };
+            var email = info.Principal
+                .FindFirstValue(System.Security.Claims.ClaimTypes.Email);
+            var user = new ApplicationUser 
+            { UserName = email, Email = email, EmailConfirmed = true };
             var result = await _userManager!.CreateAsync(user);
             if (result.Succeeded)
             {

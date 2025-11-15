@@ -12,8 +12,8 @@ using TiendaEcomerce.Data;
 namespace TiendaEcomerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251110235358_CreateDB_Inicial_V1")]
-    partial class CreateDB_Inicial_V1
+    [Migration("20251114225346_Initialize_db_v1")]
+    partial class Initialize_db_v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
