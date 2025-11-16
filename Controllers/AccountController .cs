@@ -41,7 +41,7 @@ namespace TiendaEcomerce.Controllers
             var user = new ApplicationUser { UserName = model.Email, 
                 Email = model.Email, FirstName = model.FirstName, 
                 LastName = model.LastName };
-            var result = await _userManager!.CreateAsync(user, model.Password);
+            var result = await _userManager!.CreateAsync(user, model.Password!);
             if (result.Succeeded)
             {
                 // enviar email confirmación
@@ -110,8 +110,7 @@ namespace TiendaEcomerce.Controllers
         // External login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ExternalLogin(string provider, 
-            string returnUrl = null)
+        public IActionResult ExternalLogin(string provider,string returnUrl = null)
         {
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", 
                 new { ReturnUrl = returnUrl });
