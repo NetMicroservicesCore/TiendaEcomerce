@@ -120,9 +120,7 @@ namespace TiendaEcomerce.Controllers
                 redirectUrl);
             return Challenge(properties, provider);
         }
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl =
-            null,
-            string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
             if (remoteError != null) return RedirectToAction(nameof(Login));
             var info = await _signInManager!.GetExternalLoginInfoAsync();
