@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -31,11 +32,15 @@ namespace TiendaEcomerce.Controllers
         #region Registro de Usuarios
 
         [HttpGet]
+        [Authorize]
         public IActionResult Registro() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Registro(RegisterViewModel model)
         {
+            //validamos que realmente viene autenticado
+            if (User.Identity!.IsAuthenticated)
+            { 
             if (!ModelState.IsValid) return View(model);
 
             var user = new ApplicationUser { UserName = model.Email, 
@@ -59,6 +64,8 @@ namespace TiendaEcomerce.Controllers
             foreach (var e in result.Errors) ModelState.AddModelError("",
                 e.Description);
             return View(model);
+            }
+            return LocalRedirect("/Account/Login");
         }
 
         #endregion

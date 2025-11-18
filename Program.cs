@@ -119,8 +119,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseAuthentication(); //antes de Authorization
+//antes de Authorization
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllerRoute(
