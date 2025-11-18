@@ -75,6 +75,9 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -84,6 +87,22 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+///configuramos el pipeline de la aplicacion´para deshabilitar 
+/// acceso a paginas cacheadas en todo mi sistema
+app.Use(async (context, next) =>
+{
+    //VERIFICAMOS que realmente el usuario no pueda  inyectar una url en paginas cacheadas
+    await next();
+   
+    if (context.Response.StatusCode == 200 && context.User?.Identity?.IsAuthenticated == false)
+    {
+        context.Response.Headers["Cache-Control"] = "no-store";
+        context.Response.Headers["Pragma"] = "no-cache";
+
+    }
+
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
