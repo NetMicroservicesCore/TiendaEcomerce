@@ -97,6 +97,7 @@ else
     app.UseHsts();
 }
 
+#region Configuracion base comentada para los headers 
 ///configuramos el pipeline de la aplicacion´para deshabilitar 
 /// acceso a paginas cacheadas en todo mi sistema
 /*
@@ -112,6 +113,7 @@ app.Use(async (context, next) =>
     }
 
 });*/
+#endregion
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
