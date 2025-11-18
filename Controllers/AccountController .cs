@@ -103,7 +103,7 @@ namespace TiendaEcomerce.Controllers
             if (!string.IsNullOrEmpty(returnUrl) && (Url.IsLocalUrl(returnUrl)))
             {
                 //redireciconamos unicamente a una url local para evitar ataques de redireccionamiento
-                return LocalRedirect(returnUrl);
+                return LocalRedirect("/Home/Privacy"); //returnUrl
             }
             return RedirectToAction("Login", "Account");
         }

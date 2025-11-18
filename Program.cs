@@ -33,6 +33,15 @@ builder.Services.AddIdentity<TiendaEcomerce.Models.ApplicationUser,
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
+//Configuración del Security Stamp
+//refrescamos la cookie cada minuto, para actualizar contraseñas, roles o permisos
+//reduce riesgos de seguridad en aplicaciones sensibles, o sesiones antiguas o viejas
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.FromMinutes(1);
+    // Esto fuerza que se revalide la cookie cada minuto
+    // Muy útil si cambias roles, contraseñas o permisos dinámicamente
+});
 //Config cookie
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -99,7 +108,6 @@ app.Use(async (context, next) =>
     {
         context.Response.Headers["Cache-Control"] = "no-store";
         context.Response.Headers["Pragma"] = "no-cache";
-
     }
 
 });
