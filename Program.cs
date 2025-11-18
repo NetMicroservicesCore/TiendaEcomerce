@@ -99,6 +99,7 @@ else
 
 ///configuramos el pipeline de la aplicacion´para deshabilitar 
 /// acceso a paginas cacheadas en todo mi sistema
+/*
 app.Use(async (context, next) =>
 {
     //VERIFICAMOS que realmente el usuario no pueda  inyectar una url en paginas cacheadas
@@ -110,7 +111,7 @@ app.Use(async (context, next) =>
         context.Response.Headers["Pragma"] = "no-cache";
     }
 
-});
+});*/
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

@@ -85,6 +85,7 @@ namespace TiendaEcomerce.Controllers
             ModelState.AddModelError("", "Intento de login inválido.");
             return View(model);
         }
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(string? returnUrl = null)
@@ -93,7 +94,7 @@ namespace TiendaEcomerce.Controllers
             await _signInManager!.SignOutAsync();
             //lIMPIO La cookie por completo en caso de reutilizar cache, forza a que se vuelva hacer
             //una peticion valida al servidor
-            HttpContext.Session.Clear();
+           // HttpContext.Session.Clear();
             //ELIMINAMOS CACHE o todas las cookies del cache generado para evitar ataques 
             //EVITAMOS que el usuario vea vistas protegidas presionando Back después de cerrar sesión.
             Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
@@ -103,7 +104,7 @@ namespace TiendaEcomerce.Controllers
             if (!string.IsNullOrEmpty(returnUrl) && (Url.IsLocalUrl(returnUrl)))
             {
                 //redireciconamos unicamente a una url local para evitar ataques de redireccionamiento
-                return LocalRedirect("/Home/Privacy"); //returnUrl
+                return LocalRedirect(returnUrl);   //("/Home/Privacy"); //returnUrl
             }
             return RedirectToAction("Login", "Account");
         }
