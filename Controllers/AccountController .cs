@@ -75,7 +75,9 @@ namespace TiendaEcomerce.Controllers
             var result = await _signInManager!.PasswordSignInAsync(model.Email!,
                 model.Password!, model.RememberMe, lockoutOnFailure: true);
             if (result.Succeeded)
-                return LocalRedirect(model.ReturnUrl ?? "/");
+                //solo permite redirigir hacia URLs locales dentro de la propia aplicación,
+                //es decir no sale al exterior para evitar ataques de seguridad
+                return LocalRedirect(model.ReturnUrl ?? "/Home/Index");
             if (result.RequiresTwoFactor)
                 return RedirectToAction(nameof(LoginWith2fa), 
                     new { model.ReturnUrl, model.RememberMe });
@@ -85,10 +87,24 @@ namespace TiendaEcomerce.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout(string? returnUrl = null)
         {
+            //Cerramos el uso de sesión de Identity (eliminamos la cookie principal, de mi aplicacon)
             await _signInManager!.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            //lIMPIO La cookie por completo en caso de reutilizar cache, forza a que se vuelva hacer
+            //una peticion valida al servidor
+            HttpContext.Session.Clear();
+            //ELIMINAMOS CACHE o todas las cookies del cache generado para evitar ataques 
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+            ///Generamos el redireccionamiento seguro, atraves de solo direcciones locales del sistema
+            if (!string.IsNullOrEmpty(returnUrl) && (Url.IsLocalUrl(returnUrl)))
+            {
+                //redireciconamos unicamente a una url local para evitar ataques de redireccionamiento
+                return LocalRedirect(returnUrl);
+            }
+            return RedirectToAction("Login", "Account");
         }
         #endregion
 
