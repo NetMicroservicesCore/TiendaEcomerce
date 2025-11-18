@@ -1,8 +1,10 @@
 ﻿using Dominio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TiendaEcomerce.Controllers
 {
+    [Authorize]
     public class ManagerController : Controller
     {
 
