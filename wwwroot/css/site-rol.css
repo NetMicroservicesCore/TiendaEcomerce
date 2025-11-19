@@ -1,0 +1,79 @@
+﻿:root {
+    --primary: #7454AF;
+    --primary-dark: #5d3a99;
+    --primary-light: #a98fe0;
+}
+
+.page-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(116, 84, 175, 0.25);
+}
+
+.jtable-main-container {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.jtable-title {
+    background: var(--primary) !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+.jtable-column-header {
+    background: #f8f9fa !important;
+    color: #495057 !important;
+    font-weight: 600;
+}
+
+.jtable-data-row:nth-child(even) {
+    background-color: #f9f7ff !important;
+}
+
+.btn-primary, .btn-success {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+
+.jtable-page-info {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.badge-active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-inactive {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+@@media (max-width: 768px) {
+    .page-header {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+        }
+}

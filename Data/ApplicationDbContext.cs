@@ -4,10 +4,18 @@ using TiendaEcomerce.Models;
 
 namespace TiendaEcomerce.Data;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole,string>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
+    }
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<ApplicationRole>()
+            .Property(r => r.Description)
+            .HasMaxLength(255);
     }
 }

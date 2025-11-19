@@ -1,6 +1,200 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@model IEnumerable<RoleViewModel>
 
-<p>Use this page to detail your site's privacy policy.</p>
+@{
+    ViewData["Title"] = "Administración de Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jtable/2.7.0/themes/metro/purple/jtable.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  
+
+
+<div class="container-fluid py-4 py-md-5">
+    <!-- Header moderno -->
+    <div class="page-header mb-5">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-0">
+                    <i class="bi bi-shield-lock-fill me-3"></i>
+                    Administración de Roles
+                </h1>
+                <p class="mb-0 mt-2 opacity-90">Gestiona los roles del sistema de forma sencilla y segura</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <button type="button" class="btn btn-light btn-lg px-4 shadow-sm" id="newRoleButton">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Nuevo Rol
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor jTable -->
+    <div id="RolesTableContainer"></div>
+</div>
+
+<!-- Modal Crear/Editar Rol (reutilizable) -->
+<div class="modal fade" id="roleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow-lg">
+            <form id="roleForm">
+                <div class="modal-header border-0 bg-gradient" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color:white;">
+                    <h5 class="modal-title" id="modalTitle">
+                        <i class="bi bi-shield-plus me-2"></i>Nuevo Rol
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <input type="hidden" id="roleId" />
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Nombre del Rol <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg" id="roleName" required minlength="3" maxlength="50" placeholder="Ej. Administrador del Sistema" />
+                        <div class="invalid-feedback">El nombre es obligatorio (3-50 caracteres)</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Descripción</label>
+                        <textarea class="form-control" id="roleDescription" rows="3" maxlength="200" placeholder="Describe las responsabilidades de este rol..."></textarea>
+                    </div>
+
+                    <div class="form-check form-switch mb-4">
+                        <input class="form-check-input" type="checkbox" id="roleActive" checked style="width:3.5em;height:1.8em;">
+                        <label class="form-check-label fw-semibold" for="roleActive">
+                            <i class="bi bi-check-circle-fill text-success"></i> Rol Activo
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary px-5">
+                        <span id="submitText">Guardar Rol</span>
+                        <span class="spinner-border spinner-border-sm d-none" id="submitSpinner"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar el rol <strong id="deleteRoleName"></strong>?</p>
+                <small class="text-muted">Esta acción no se puede deshacer.</small>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Eliminar Rol</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jtable/2.7.0/jquery.jtable.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#RolesTableContainer').jtable({
+                title: 'Roles del Sistema',
+                paging: true,
+                pageSize: 10,
+                sorting: true,
+                defaultSorting: 'Name ASC',
+                selecting: true,
+                multiselect: false,
+                actions: {
+                    listAction: '/Admin/Roles/List',
+                    createAction: '/Admin/Roles/Create',
+                    updateAction: '/Admin/Roles/Update',
+                    deleteAction: '/Admin/Roles/Delete'
+                },
+                fields: {
+                    Id: {
+                        key: true,
+                        list: false
+                    },
+                    Name: {
+                        title: 'Nombre del Rol',
+                        width: '25%',
+                        create: true,
+                        edit: true
+                    },
+                    Description: {
+                        title: 'Descripción',
+                        width: '35%',
+                        create: true,
+                        edit: true,
+                        type: 'textarea'
+                    },
+                    IsActive: {
+                        title: 'Estado',
+                        width: '10%',
+                        create: true,
+                        edit: true,
+                        type: 'checkbox',
+                        values: { false: 'Inactivo', true: 'Activo' },
+                        defaultValue: true,
+                        display: function (data) {
+                            var badge = data.record.IsActive
+                                ? '<span class="badge badge-active rounded-pill px-3 py-2">Activo</span>'
+                                : '<span class="badge badge-inactive rounded-pill px-3 py-2">Inactivo</span>';
+                            return badge;
+                        }
+                    },
+                    CreatedDate: {
+                        title: 'Fecha Creación',
+                        width: '15%',
+                        create: false,
+                        edit: false,
+                        display: function (data) {
+                            return new Date(data.record.CreatedDate).toLocaleDateString('es-ES');
+                        }
+                    }
+                },
+                formCreated: function (event, data) {
+                    // Personalización del formulario dentro de jTable
+                    data.form.find('input[name="Name"]').attr('placeholder', 'Ej. Administrador');
+                    data.form.find('textarea[name="Description"]').attr('placeholder', 'Descripción del rol...');
+                    data.form.addClass('needs-validation');
+                    data.form.find('input, textarea').addClass('form-control');
+                },
+                recordAdded: function () {
+                    showSuccess('Rol creado correctamente');
+                },
+                recordUpdated: function () {
+                    showSuccess('Rol actualizado correctamente');
+                },
+                recordDeleted: function () {
+                    showSuccess('Rol eliminado correctamente');
+                }
+            });
+
+            $('#RolesTableContainer').jtable('load');
+
+            // Botón externo para crear nuevo rol
+            $('#newRoleButton').on('click', function () {
+                $('#RolesTableContainer').jtable('openAddRecordDialog');
+            });
+
+            // Toast de éxito
+            function showSuccess(message) {
+                if (typeof (toastr) !== 'undefined') {
+                    toastr.success(message);
+                } else {
+                    alert(message);
+                }
+            }
+        });
+    </script>
+}

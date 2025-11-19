@@ -9,9 +9,9 @@ namespace TiendaEcomerce.Controllers
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         public AdminController(UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<ApplicationRole> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -23,8 +23,36 @@ namespace TiendaEcomerce.Controllers
             return View(users);
         }
         #endregion
-        
+
+        #region Metodo Oficial Crear Roles
+
         [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] ApplicationRole roleData)
+        {
+            if (User.Identity!.IsAuthenticated)
+            {
+                if (!await _roleManager.RoleExistsAsync(roleData.Name!))
+                {
+                    await _roleManager.CreateAsync(new ApplicationRole { Name=roleData.Name!, Description= roleData.Description});
+                }
+                return RedirectToAction("Index","Home");
+            }
+            return RedirectToAction("Login");
+        }
+
+
+
+        #endregion
+
+        [HttpGet]
+        [Authorize]   //falta validar  por politicas de seguridad o roles de usuario
         public async Task<IActionResult> AddRoles() {
             return View();
         }
@@ -34,7 +62,7 @@ namespace TiendaEcomerce.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();
             if (!await _roleManager.RoleExistsAsync(Name)) await 
-                    _roleManager.CreateAsync(new IdentityRole(Name));
+                    _roleManager.CreateAsync(new ApplicationRole { Name = Name });
             await _userManager.AddToRoleAsync(user, Name);
             return RedirectToAction("Users");
         }
@@ -52,23 +80,6 @@ namespace TiendaEcomerce.Controllers
             string variable = "Hola";
             return View();
         }
-
-        #region Create Roles
-        
-        [HttpPost]
-        public async Task<IActionResult> Create(string Name)
-        {
-            if (User.Identity!.IsAuthenticated)
-            {
-                if (!await _roleManager.RoleExistsAsync(Name))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(Name));
-                }
-                return RedirectToAction("Index");
-            }
-            return RedirectToAction("Login");
-        }
-        #endregion
 
         #region Implementacion de Vistas Parciales
         [HttpPost]

@@ -52,9 +52,22 @@
             &copy; 2025 - TiendaEcomerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!--<script src="~/lib/jquery/dist/jquery.min.js"></script>-->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+            integrity="sha512-3gJwYpMe3QewGELv8k/BX9vc2HOafIniK4zKgi8e3e26qW0rZMD2z3c0l0eT5mkvq8mOqq0AG8LufjClAW3J7og=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jtable/2.7.0/jquery.jtable.min.js"></script>
+
+    <!-- Bootstrap Bundle (incluye Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Tus scripts personalizados (el de Roles) -->
     @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Styles", required: false)
+
 </body>
 </html>

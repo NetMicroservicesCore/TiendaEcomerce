@@ -9,14 +9,14 @@ namespace TiendaEcomerce.Extensions
             IServiceProvider serviceProvider, IConfiguration configuration)
         {
             var roleManager = serviceProvider
-                .GetRequiredService<RoleManager<IdentityRole>>();
+                .GetRequiredService<RoleManager<ApplicationRole>>();
             var userManager = serviceProvider
                 .GetRequiredService<UserManager<ApplicationUser>>();
             string[] roles = new[] { "Admin", "Manager", "User" };
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
-                    await roleManager.CreateAsync(new IdentityRole(role));
+                    await roleManager.CreateAsync(new ApplicationRole {Name=role});
             }
             // Admin user (lee credenciales desde config o secret manager)
             var adminEmail = configuration["Seed:AdminEmail"];

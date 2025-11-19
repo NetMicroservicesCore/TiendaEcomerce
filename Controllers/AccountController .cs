@@ -16,12 +16,12 @@ namespace TiendaEcomerce.Controllers
         private readonly SignInManager<ApplicationUser>? 
             _signInManager;
         private readonly IEmailSender? _emailSender;
-        private readonly RoleManager<IdentityRole>? _roleManager;
+        private readonly RoleManager<ApplicationRole>? _roleManager;
         public AccountController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         IEmailSender emailSender,
-        RoleManager<IdentityRole> roleManager)
+        RoleManager<ApplicationRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

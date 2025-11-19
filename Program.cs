@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using TiendaEcomerce.Data;
 using TiendaEcomerce.Extensions;
+using TiendaEcomerce.Models;
 using TiendaEcomerce.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 //Identity con user y roles
 builder.Services.AddIdentity<TiendaEcomerce.Models.ApplicationUser,
-    IdentityRole>(options =>
+    ApplicationRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;

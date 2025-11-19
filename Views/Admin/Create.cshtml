@@ -1,0 +1,185 @@
+﻿@model ApplicationRole
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/site-rol.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+}
+
+<div class="container-fluid ">
+    <!-- Header moderno -->
+    <div class="page-header mb-5">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-0">
+                    <i class="bi bi-shield-lock-fill me-3"></i>
+                    Administración de Roles
+                </h1>
+                <p class="mx-0 mb-0 mt-2 opacity-90">Gestiona los roles del sistema de forma sencilla y segura</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <button type="button" class="btn btn-sm btn-light btn-lg px-4 shadow-sm" id="newRoleButton">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Nuevo Rol
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Contenedor de jTable -->
+    <div id="RolesTableContainer" class="animate__animated animate__fadeIn"></div>
+</div>
+<!-- Modal personalizado (más bonito que el de jTable) -->
+<div class="modal fade" id="roleModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4 overflow-hidden shadow-xl">
+            <form id="roleForm" novalidate asp-action="Create" asp-controller="Admin">
+                <div class="modal-header border-0 text-white" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+                    <h5 class="modal-title fw-bold" id="modalTitle">
+                        <i class="bi bi-shield-plus me-3"></i>Nuevo Rol
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body py-5 px-4 px-md-5">
+                    <input type="hidden" id="roleId" />
+
+                    <div class="mb-2">
+                        <label class="form-label fw-bold text-dark">Nombre del Rol <span class="text-danger">*</span></label>
+                        <input type="text" asp-for="Name" class="form-control form-control-sm rounded-3 shadow-sm" id="roleName" required minlength="3" maxlength="50" placeholder="Ej. Administrador General" />
+                        <div class="invalid-feedback">Ingresa un nombre válido (3-50 caracteres)</div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label fw-bold text-dark">Descripción</label>
+                        <textarea class="form-control form-control-sm  rounded-3 shadow-sm" asp-for="Description" id="roleDescription" rows="4" maxlength="255" placeholder="Describe las responsabilidades y permisos de este rol..."></textarea>
+                    </div>
+                                        
+                </div>
+                <div class="modal-footer border-0 bg-light px-4 px-md-5 py-1">
+                    <button type="button" class="btn btn-sm btn-outline-secondary px-5 py-2" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-primary px-5 py-2 shadow" id="submitButton">
+                        <span class="spinner-border spinner-border-sm me-2 d-none" id="submitSpinner"></span>
+                        <span id="submitText">Guardar Rol</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal de eliminación mejorado -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-danger border-2">
+            <div class="modal-header border-0 text-danger bg-danger-subtle">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-exclamation-triangle-fill me-3"></i>¿Eliminar rol permanentemente?
+                </h5>
+            </div>
+            <div class="modal-body py-4">
+                <p class="mb-3">Vas a eliminar el rol:</p>
+                <h5 class="text-danger fw-bold" id="deleteRoleName"></h5>
+                <div class="alert alert-warning mt-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Esta acción <strong>no se puede deshacer</strong>. Los usuarios con este rol podrían perder acceso.
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger px-5" id="confirmDelete">
+                    <i class="bi bi-trash-fill me-2"></i>Eliminar Rol
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section Scripts {
+    <script>
+        
+        const newRoleBtn = document.getElementById("newRoleButton");
+        const roleModalEl = document.getElementById("roleModal");
+        const roleForm = document.getElementById("roleForm");
+
+        // Bootstrap Modal instance
+        const roleModal = new bootstrap.Modal(roleModalEl);
+        // FUNCIÓN PARA ABRIR MODAL (Nuevo Rol)
+        newRoleBtn.addEventListener("click", () => {
+            roleForm.reset();
+            document.getElementById("modalTitle").innerHTML =
+                `<i class="bi bi-shield-plus me-3"></i>Nuevo Rol`;
+
+            document.getElementById("submitText").textContent = "Guardar Rol";
+            document.getElementById("submitSpinner").classList.add("d-none");
+
+            // Abrir modal
+            roleModal.show();
+        });
+
+        // ===============================
+        // ENVÍO DEL FORMULARIO (JavaScript puro)
+        // ===============================
+        roleForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            // Validación HTML5
+            if (!roleForm.checkValidity()) {
+                roleForm.classList.add("was-validated");
+                return;
+            }
+
+            // Mostrar spinner
+            const btn = document.getElementById("submitButton");
+            const spinner = document.getElementById("submitSpinner");
+            const submitText = document.getElementById("submitText");
+
+            btn.disabled = true;
+            spinner.classList.remove("d-none");
+            submitText.textContent = "Guardando...";
+
+            // Datos del formulario
+            const roleData = {
+                Id: document.getElementById("roleId").value || null,
+                Name: document.getElementById("roleName").value.trim(),
+                Description: document.getElementById("roleDescription").value.trim(),
+                //IsActive: document.getElementById("roleActive").checked
+            };
+
+            try {
+                const response = await fetch("/Admin/Create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(roleData)
+                });
+
+                if (!response.ok) {
+                    let errorMsg = await response.text();
+                    Swal.fire("Error", errorMsg || "No se pudo guardar el rol", "error");
+                    return;
+                }
+
+                // Cerrar modal
+                roleModal.hide();
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Rol creado",
+                    text: "El rol se guardó correctamente",
+                    timer: 1500
+                });
+
+                // TODO: Actualizar tabla (cuando la tengas hecha)
+                // loadRoles();
+
+            } catch (err) {
+                Swal.fire("Error", "Error de conexión con el servidor", "error");
+            } finally {
+                btn.disabled = false;
+                spinner.classList.add("d-none");
+                submitText.textContent = "Guardar Rol";
+            }
+        });
+    </script>
+}
