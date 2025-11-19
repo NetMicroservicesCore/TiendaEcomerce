@@ -6,6 +6,7 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/site-rol.css" asp-append-version="true" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
 }
 
 <div class="container-fluid ">
@@ -27,7 +28,18 @@
         </div>
     </div>
     <!-- Contenedor de jTable -->
-    <div id="RolesTableContainer" class="animate__animated animate__fadeIn"></div>
+    <div id="RolesTableContainer" class="animate__animated animate__fadeIn">
+        <table id="productsTable" class="table table-responsive-lg table-striped " style="width:100%">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre del Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
 <!-- Modal personalizado (más bonito que el de jTable) -->
 <div class="modal fade" id="roleModal" tabindex="-1" data-bs-backdrop="static">
@@ -96,6 +108,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 @section Scripts {
     <script>
         
@@ -181,5 +195,54 @@
                 submitText.textContent = "Guardar Rol";
             }
         });
+
+        $(document).ready(function(){
+            $('#productsTable').DataTable({
+            processing: false,
+            serverSide: false,
+            filter: true,
+            orderMulti: false,
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json"
+            },
+            ajax: {
+                url: '/Admin/GetAsyncAllRoles',
+                type: 'GET',
+                dataSrc: '',
+            },
+
+            columns: [
+                                
+                { data: 'id' },
+                { data: 'name' },
+                {
+                  data: 'id',
+                  render: function (data) {
+                    return `
+                        <button class="btn btn-sm btn-primary" onclick="editar(${data})">
+                            Editar
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminar(${data})">
+                            Eliminar
+                        </button>
+                        `;
+                },
+                orderable: false,   // No ordenar esta columna
+                searchable: false   // No buscar esta columna
+                }
+            ]
+        });
+        
+        });
+        
+        function editar(id) {
+            // Redirección a la vista de edición
+            window.location.href = `/Products/Edit/${id}`;
+        }
+        function eliminar(id) {
+            if (confirm("¿Estás seguro de eliminar este registro?")) {
+                window.location.href = `/Products/Delete/${id}`;
+            }
+        }
     </script>
 }

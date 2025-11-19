@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TiendaEcomerce.Models;
 
 namespace TiendaEcomerce.Controllers
@@ -51,6 +52,19 @@ namespace TiendaEcomerce.Controllers
 
         #endregion
 
+
+        #region Consultar Roles
+        /// <summary>
+        /// Este metodo se encarga de consukltar todos los roles del sistema
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<JsonResult> GetAsyncAllRoles()
+        {
+            List<ApplicationRole> roles = await _roleManager.Roles.ToListAsync<ApplicationRole>() ;
+            return Json(roles);
+        }
+        #endregion
         [HttpGet]
         [Authorize]   //falta validar  por politicas de seguridad o roles de usuario
         public async Task<IActionResult> AddRoles() {
