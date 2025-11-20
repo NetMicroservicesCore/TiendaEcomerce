@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TiendaEcomerce.Data;
 using TiendaEcomerce.Models;
 
 namespace TiendaEcomerce.Controllers
@@ -11,11 +12,13 @@ namespace TiendaEcomerce.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly ApplicationDbContext _context;
         public AdminController(UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _context = context;
         }
         #region Usuarios
         public async Task<IActionResult> Users()
@@ -114,6 +117,38 @@ namespace TiendaEcomerce.Controllers
         }
 
         #endregion
+
+
+        #region Asignar Permissiins a los Roles
+        public async Task<IActionResult> Edit(string roleId)
+        {
+           /*
+            var role = await _roleManager.FindByIdAsync(roleId);
+
+            var permissions = await _context.Permissions.ToListAsync();
+            var rolePermissions = await _context.RolePermissions
+                        .Where(x => x.RoleId == roleId)
+                        .Select(x => x.PermissionId)
+                        .ToListAsync();
+
+            var vm = new RolePermissionViewModel
+            {
+                RoleId = role.Id,
+                RoleName = role.Name,
+                Permissions = permissions.Select(p => new PermissionSelection
+                {
+                    PermissionId = p.Id,
+                    Key = p.Key,
+                    Description = p.Description,
+                    Assigned = rolePermissions.Contains(p.Id)
+                }).ToList()
+            };*/
+
+            return View(); //vm
+        }
+        #endregion
+
+
 
 
     }

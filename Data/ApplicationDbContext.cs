@@ -1,14 +1,20 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using TiendaEcomerce.Models;
 
 namespace TiendaEcomerce.Data;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole,string>
 {
+
+    public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<Permission> Permissions { get; set; }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
+        
     }
     protected override void OnModelCreating(ModelBuilder builder)
     {
