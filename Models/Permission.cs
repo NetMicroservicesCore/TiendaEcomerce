@@ -2,8 +2,9 @@
 {
     public class Permission
     {
-        public int Id { get; set; }
-        public string? Key { get; set; }  // "Course.ReadOwn"
+
+        public int PermissionId { get; set; }   // Debe coincidir con la clave
+        public string? Name { get; set; }
         public string? Description { get; set; }
     }
 }

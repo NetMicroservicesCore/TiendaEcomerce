@@ -6,6 +6,6 @@ namespace TiendaEcomerce.Models
     {
         public string? Description { get; set; }
 
-        public ICollection<RolePermission> RolePermissions { get; set; }
+        public List<RolePermission>? RolePermissions { get; set; }
     }
 }

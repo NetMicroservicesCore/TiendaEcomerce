@@ -1,5 +1,360 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model RolePermissionViewModel
+
 @{
+    ViewData["Title"] = "Gestión de Permisos";
 }
+
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="~/css/NewPermission.css" />
+
+<div class="permissions-container">
+    <!-- Header del Rol -->
+    <div class="role-header">
+        <h1>
+            <i class="bi bi-shield-lock"></i>
+            @Model.RoleName
+        </h1>
+        <p class="role-subtitle">Configure los permisos de acceso para este rol</p>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-value" id="assignedCount">0</div>
+            <div class="stat-label">Permisos Asignados</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="totalCount">@Model.Permissions.Count</div>
+            <div class="stat-label">Total de Permisos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="changesCount">0</div>
+            <div class="stat-label">Cambios Pendientes</div>
+        </div>
+    </div>
+
+    <!-- Controles de Búsqueda y Acciones -->
+    <div class="controls-section">
+        <div class="d-flex flex-wrap align-items-center gap-3">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text"
+                       id="searchInput"
+                       placeholder="Buscar permisos..."
+                       aria-label="Buscar permisos" class="form-control form-control-sm">
+            </div>
+            <div class="bulk-actions ms-auto">
+                <button type="button" class="btn-outline-custom" id="selectAllBtn">
+                    <i class="bi bi-check-all"></i> Seleccionar Todos
+                </button>
+                <button type="button" class="btn-outline-custom" id="deselectAllBtn">
+                    <i class="bi bi-x-circle"></i> Deseleccionar Todos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario Principal -->
+    <form asp-action="Edit" method="post" id="permissionsForm">
+        <input type="hidden" asp-for="RoleId" />
+
+        <div class="permissions-list" id="permissionsList">
+            @{
+                // Agrupar permisos por prefijo (primera palabra antes del punto)
+                var groupedPermissions = Model.Permissions
+                .Select((p, index) => new { Permission = p, Index = index })
+                .GroupBy(x => x.Permission.Key.Split('.').FirstOrDefault() ?? "General")
+                .OrderBy(g => g.Key);
+
+                foreach (var group in groupedPermissions)
+                {
+                    var groupKey = group.Key;
+                    var groupIcon = GetIconForGroup(groupKey);
+
+                    <div class="permission-group" data-group="@groupKey">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#group-@groupKey">
+                            <div class="group-title">
+                                <div class="group-icon">
+                                    <i class="bi bi-@groupIcon"></i>
+                                </div>
+                                <span>@groupKey</span>
+                                <span class="group-badge">@group.Count()</span>
+                            </div>
+                            <i class="bi bi-chevron-down group-toggle"></i>
+                        </div>
+                        <div class="collapse show permissions-items" id="group-@groupKey">
+                            @foreach (var item in group)
+                            {
+                                var i = item.Index;
+                                <div class="permission-item" data-permission-id="@Model.Permissions[i].PermissionId">
+                                    <div class="permission-info">
+                                        <div class="permission-name">@Model.Permissions[i].Key</div>
+                                        <div class="permission-description">@Model.Permissions[i].Description</div>
+                                    </div>
+                                    <div class="toggle-wrapper">
+                                        <label class="toggle-switch" for="permission-@i">
+                                            <input type="checkbox"
+                                                   id="permission-@i"
+                                                   asp-for="Permissions[i].Assigned"
+                                                   data-original="@Model.Permissions[i].Assigned.ToString().ToLower()"
+                                                   aria-label="Asignar permiso @Model.Permissions[i].Key" />
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-status @(Model.Permissions[i].Assigned ? "active" : "inactive")">
+                                            @(Model.Permissions[i].Assigned ? "Activo" : "Inactivo")
+                                        </span>
+                                        <input type="hidden" asp-for="Permissions[i].PermissionId" />
+                                        <input type="hidden" asp-for="Permissions[i].Key" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- Footer de Acciones -->
+        <div class="actions-footer">
+            <div class="changes-indicator hidden" id="changesIndicator">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span>Tienes cambios sin guardar</span>
+            </div>
+            <div class="action-buttons">
+                <button type="button" class="btn-secondary-custom" onclick="window.history.back()">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </button>
+                <button type="submit" class="btn-primary-custom" id="saveBtn">
+                    <i class="bi bi-check-circle"></i> Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Guardando cambios...</p>
+    </div>
+</div>
+
+@functions {
+    // Función helper para asignar iconos según el grupo
+    string GetIconForGroup(string groupName)
+    {
+        return groupName.ToLower() switch
+        {
+            "users" or "usuarios" => "people-fill",
+            "roles" => "shield-fill-check",
+            "products" or "productos" => "box-seam",
+            "orders" or "pedidos" => "cart-fill",
+            "reports" or "reportes" => "graph-up",
+            "settings" or "configuracion" => "gear-fill",
+            "admin" or "administracion" => "key-fill",
+            "security" or "seguridad" => "lock-fill",
+            _ => "folder-fill"
+        };
+    }
+}
+
+<script>
+    // ========== Estado de la Aplicación ==========
+    const appState = {
+        originalValues: new Map(),
+        hasChanges: false,
+        changesCount: 0
+    };
+
+    // ========== Inicialización ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeApp();
+        setupEventListeners();
+        updateStatistics();
+    });
+
+    function initializeApp() {
+        // Guardar valores originales
+        document.querySelectorAll('input[type="checkbox"][id^="permission-"]').forEach(checkbox => {
+            appState.originalValues.set(checkbox.id, checkbox.checked);
+        });
+    }
+
+    function setupEventListeners() {
+        // Búsqueda en tiempo real
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', handleSearch);
+
+        // Selección masiva
+        document.getElementById('selectAllBtn').addEventListener('click', () => selectAll(true));
+        document.getElementById('deselectAllBtn').addEventListener('click', () => selectAll(false));
+
+        // Cambios en checkboxes
+        document.querySelectorAll('input[type="checkbox"][id^="permission-"]').forEach(checkbox => {
+            checkbox.addEventListener('change', handlePermissionChange);
+        });
+
+        // Prevenir pérdida de cambios
+        window.addEventListener('beforeunload', function(e) {
+            if (appState.hasChanges) {
+                e.preventDefault();
+                e.returnValue = '¿Estás seguro de que quieres salir? Hay cambios sin guardar.';
+            }
+        });
+
+        // Submit del formulario
+        document.getElementById('permissionsForm').addEventListener('submit', handleFormSubmit);
+
+        // Expandir/colapsar grupos
+        document.querySelectorAll('.group-header').forEach(header => {
+            header.addEventListener('click', function() {
+                this.classList.toggle('collapsed');
+            });
+        });
+    }
+
+    // ========== Búsqueda ==========
+    function handleSearch(e) {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        const permissionItems = document.querySelectorAll('.permission-item');
+        const groups = document.querySelectorAll('.permission-group');
+
+        if (searchTerm === '') {
+            // Mostrar todo
+            permissionItems.forEach(item => item.style.display = '');
+            groups.forEach(group => group.style.display = '');
+            return;
+        }
+
+        // Filtrar permisos
+        groups.forEach(group => {
+            const items = group.querySelectorAll('.permission-item');
+            let visibleCount = 0;
+
+            items.forEach(item => {
+                const name = item.querySelector('.permission-name').textContent.toLowerCase();
+                const description = item.querySelector('.permission-description').textContent.toLowerCase();
+
+                if (name.includes(searchTerm) || description.includes(searchTerm)) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Ocultar grupo si no tiene items visibles
+            group.style.display = visibleCount > 0 ? '' : 'none';
+        });
+    }
+
+    // ========== Selección Masiva ==========
+    function selectAll(checked) {
+        const visibleCheckboxes = Array.from(document.querySelectorAll('.permission-item'))
+            .filter(item => item.style.display !== 'none')
+            .map(item => item.querySelector('input[type="checkbox"]'));
+
+        visibleCheckboxes.forEach(checkbox => {
+            if (checkbox.checked !== checked) {
+                checkbox.checked = checked;
+                updateToggleStatus(checkbox);
+                checkForChanges(checkbox);
+            }
+        });
+
+        updateStatistics();
+        updateChangesIndicator();
+    }
+
+    // ========== Manejo de Cambios ==========
+    function handlePermissionChange(e) {
+        const checkbox = e.target;
+        updateToggleStatus(checkbox);
+        checkForChanges(checkbox);
+        updateStatistics();
+        updateChangesIndicator();
+    }
+
+    function updateToggleStatus(checkbox) {
+        const wrapper = checkbox.closest('.toggle-wrapper');
+        const statusSpan = wrapper.querySelector('.toggle-status');
+
+        if (checkbox.checked) {
+            statusSpan.textContent = 'Activo';
+            statusSpan.classList.remove('inactive');
+            statusSpan.classList.add('active');
+        } else {
+            statusSpan.textContent = 'Inactivo';
+            statusSpan.classList.remove('active');
+            statusSpan.classList.add('inactive');
+        }
+    }
+
+    function checkForChanges(checkbox) {
+        const originalValue = appState.originalValues.get(checkbox.id);
+        const currentValue = checkbox.checked;
+        const permissionItem = checkbox.closest('.permission-item');
+
+        if (originalValue !== currentValue) {
+            permissionItem.classList.add('changed');
+        } else {
+            permissionItem.classList.remove('changed');
+        }
+
+        // Contar cambios totales
+        appState.changesCount = document.querySelectorAll('.permission-item.changed').length;
+        appState.hasChanges = appState.changesCount > 0;
+    }
+
+    function updateChangesIndicator() {
+        const indicator = document.getElementById('changesIndicator');
+        const changesCountEl = document.getElementById('changesCount');
+
+        changesCountEl.textContent = appState.changesCount;
+
+        if (appState.hasChanges) {
+            indicator.classList.remove('hidden');
+        } else {
+            indicator.classList.add('hidden');
+        }
+    }
+
+    // ========== Estadísticas ==========
+    function updateStatistics() {
+        const allCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="permission-"]');
+        const assignedCount = Array.from(allCheckboxes).filter(cb => cb.checked).length;
+
+        document.getElementById('assignedCount').textContent = assignedCount;
+    }
+
+    // ========== Submit del Formulario ==========
+    function handleFormSubmit(e) {
+        if (!appState.hasChanges) {
+            e.preventDefault();
+            alert('No hay cambios para guardar.');
+            return;
+        }
+
+        const confirmMessage = `¿Está seguro de que desea guardar ${appState.changesCount} cambio(s) en los permisos?`;
+
+        if (!confirm(confirmMessage)) {
+            e.preventDefault();
+            return;
+        }
+
+        // Mostrar loading overlay
+        document.getElementById('loadingOverlay').classList.add('active');
+
+        // Deshabilitar el botón de guardar
+        document.getElementById('saveBtn').disabled = true;
+    }
+
+    // ========== Utilidades ==========
+    // Función para debug (remover en producción)
+    window.debugPermissions = function() {
+        console.log('Estado de la aplicación:', appState);
+        console.log('Permisos cambiados:', document.querySelectorAll('.permission-item.changed').length);
+    };
+</script>
