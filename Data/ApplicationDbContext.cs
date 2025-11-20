@@ -17,5 +17,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         builder.Entity<ApplicationRole>()
             .Property(r => r.Description)
             .HasMaxLength(255);
+
+        builder.Entity<RolePermission>()
+        .HasKey(rp => new { rp.RoleId, rp.PermissionId });
+
+        builder.Entity<RolePermission>()
+            .HasOne(rp => rp.Role)
+            .WithMany(r => r.RolePermissions)
+            .HasForeignKey(rp => rp.RoleId);
+
+        builder.Entity<RolePermission>()
+            .HasOne(rp => rp.Permission)
+            .WithMany()
+            .HasForeignKey(rp => rp.PermissionId);
+
     }
 }
