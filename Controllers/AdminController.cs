@@ -120,9 +120,9 @@ namespace TiendaEcomerce.Controllers
 
 
         #region Asignar Permissiins a los Roles
-        public async Task<IActionResult> Edit(string roleId)
+        public async Task<IActionResult> Edit()
         {
-           /*
+            string roleId = "5cbb6d34-d56f-4eaa-be40-3859c5581326";
             var role = await _roleManager.FindByIdAsync(roleId);
 
             var permissions = await _context.Permissions.ToListAsync();
@@ -142,9 +142,8 @@ namespace TiendaEcomerce.Controllers
                     Description = p.Description,
                     Assigned = rolePermissions.Contains(p.Id)
                 }).ToList()
-            };*/
-
-            return View(); //vm
+            };
+            return View(vm); 
         }
         #endregion
 
