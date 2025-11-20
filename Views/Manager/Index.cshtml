@@ -1,42 +1,878 @@
-﻿@model Dominio.Operaciones
+﻿@model RolePermissionViewModel
 
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Gestión de Permisos";
 }
 
-<h1>Index</h1>
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-<h4>Operaciones</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Index">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Digito1" class="control-label"></label>
-                <input asp-for="Digito1" class="form-control" id="Digito1" required type="number"
-                />
-                <span asp-validation-for="Digito1" class="text-danger"></span>
+<style>
+    /* ========== Variables y Tema ========== */
+    :root {
+        --primary-color: #4f46e5;
+        --primary-hover: #4338ca;
+        --success-color: #10b981;
+        --danger-color: #ef4444;
+        --border-radius: 12px;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ========== Container Principal ========== */
+    .permissions-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    /* ========== Header del Rol ========== */
+    .role-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #6366f1 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 2rem;
+    }
+
+        .role-header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+    .role-subtitle {
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    /* ========== Estadísticas ========== */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        border-left: 4px solid var(--primary-color);
+        transition: var(--transition);
+    }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+    }
+
+    /* ========== Barra de Búsqueda y Controles ========== */
+    .controls-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 1.5rem;
+    }
+
+    .search-box {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+    }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+            .search-box input:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+    .bulk-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-outline-custom {
+        padding: 0.5rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        background: white;
+        color: #4b5563;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+
+        .btn-outline-custom:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: #f5f3ff;
+        }
+
+    /* ========== Lista de Permisos ========== */
+    .permissions-list {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+    }
+
+    .permission-group {
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+        .permission-group:last-child {
+            border-bottom: none;
+        }
+
+    .group-header {
+        background: #f9fafb;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: var(--transition);
+        border-left: 4px solid transparent;
+    }
+
+        .group-header:hover {
+            background: #f3f4f6;
+            border-left-color: var(--primary-color);
+        }
+
+        .group-header.active {
+            background: #eef2ff;
+            border-left-color: var(--primary-color);
+        }
+
+    .group-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 1rem;
+    }
+
+    .group-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        color: var(--primary-color);
+        font-size: 1.25rem;
+    }
+
+    .group-badge {
+        background: var(--primary-color);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .group-toggle {
+        color: #6b7280;
+        transition: var(--transition);
+    }
+
+    .group-header.collapsed .group-toggle {
+        transform: rotate(-90deg);
+    }
+
+    /* ========== Items de Permisos ========== */
+    .permissions-items {
+        padding: 0.5rem 0;
+    }
+
+    .permission-item {
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: var(--transition);
+        border-left: 4px solid transparent;
+    }
+
+        .permission-item:hover {
+            background: #f9fafb;
+            border-left-color: #e5e7eb;
+        }
+
+        .permission-item.changed {
+            background: #fef3c7;
+            border-left-color: #fbbf24;
+        }
+
+    .permission-info {
+        flex: 1;
+        padding-right: 1rem;
+    }
+
+    .permission-name {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+    }
+
+    .permission-description {
+        color: #6b7280;
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+
+    /* ========== Toggle Switch ========== */
+    .toggle-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 52px;
+        height: 28px;
+    }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #d1d5db;
+        transition: var(--transition);
+        border-radius: 34px;
+    }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: var(--success-color);
+    }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+    .toggle-switch input:focus + .toggle-slider {
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    .toggle-status {
+        font-size: 0.875rem;
+        font-weight: 600;
+        min-width: 80px;
+    }
+
+        .toggle-status.active {
+            color: var(--success-color);
+        }
+
+        .toggle-status.inactive {
+            color: #9ca3af;
+        }
+
+    /* ========== Footer de Acciones ========== */
+    .actions-footer {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        position: sticky;
+        bottom: 1rem;
+        z-index: 10;
+    }
+
+    .changes-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #fef3c7;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #92400e;
+    }
+
+        .changes-indicator.hidden {
+            display: none;
+        }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .btn-primary-custom {
+        padding: 0.75rem 2rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-primary-custom:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary-custom:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    .btn-secondary-custom {
+        padding: 0.75rem 1.5rem;
+        background: white;
+        color: #4b5563;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+        .btn-secondary-custom:hover {
+            border-color: #9ca3af;
+            color: #1f2937;
+        }
+
+    /* ========== Estados de Carga ========== */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+    .loading-spinner {
+        background: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+    }
+
+    .spinner {
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0%
+
+    {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    /* ========== Mensaje de Estado Vacío ========== */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6b7280;
+    }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+    /* ========== Responsive ========== */
+    @media (max-width: 768px) {
+        .role-header h1
+
+    {
+        font-size: 1.5rem;
+    }
+
+    .controls-section {
+        padding: 1rem;
+    }
+
+    .search-box {
+        max-width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .permission-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .toggle-wrapper {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .actions-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-primary-custom,
+    .btn-secondary-custom {
+        width: 100%;
+        justify-content: center;
+    }
+
+    }
+</style>
+
+<div class="permissions-container">
+    <!-- Header del Rol -->
+    <div class="role-header">
+        <h1>
+            <i class="bi bi-shield-lock"></i>
+            @Model.RoleName
+        </h1>
+        <p class="role-subtitle">Configure los permisos de acceso para este rol</p>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-value" id="assignedCount">0</div>
+            <div class="stat-label">Permisos Asignados</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="totalCount">@Model.Permissions.Count</div>
+            <div class="stat-label">Total de Permisos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="changesCount">0</div>
+            <div class="stat-label">Cambios Pendientes</div>
+        </div>
+    </div>
+
+    <!-- Controles de Búsqueda y Acciones -->
+    <div class="controls-section">
+        <div class="d-flex flex-wrap align-items-center gap-3">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text"
+                       id="searchInput"
+                       placeholder="Buscar permisos..."
+                       aria-label="Buscar permisos">
             </div>
-            <div class="form-group">
-                <label asp-for="Digito2" class="control-label"></label>
-                <input asp-for="Digito2" class="form-control" id="Digito2" required type="number" />
-                <span asp-validation-for="Digito2" class="text-danger"></span>
+            <div class="bulk-actions ms-auto">
+                <button type="button" class="btn-outline-custom" id="selectAllBtn">
+                    <i class="bi bi-check-all"></i> Seleccionar Todos
+                </button>
+                <button type="button" class="btn-outline-custom" id="deselectAllBtn">
+                    <i class="bi bi-x-circle"></i> Deseleccionar Todos
+                </button>
             </div>
-            <div class="form-group">
-                <label asp-for="Resultado" class="control-label"></label>
-                <input asp-for="Resultado" class="form-control" />
-                <span asp-validation-for="Resultado" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- Formulario Principal -->
+    <form asp-action="Edit" method="post" id="permissionsForm">
+        <input type="hidden" asp-for="RoleId" />
+
+        <div class="permissions-list" id="permissionsList">
+            @{
+                // Agrupar permisos por prefijo (primera palabra antes del punto)
+                var groupedPermissions = Model.Permissions
+                .Select((p, index) => new { Permission = p, Index = index })
+                .GroupBy(x => x.Permission.Key.Split('.').FirstOrDefault() ?? "General")
+                .OrderBy(g => g.Key);
+
+                foreach (var group in groupedPermissions)
+                {
+                    var groupKey = group.Key;
+                    var groupIcon = GetIconForGroup(groupKey);
+
+                    <div class="permission-group" data-group="@groupKey">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#group-@groupKey">
+                            <div class="group-title">
+                                <div class="group-icon">
+                                    <i class="bi bi-@groupIcon"></i>
+                                </div>
+                                <span>@groupKey</span>
+                                <span class="group-badge">@group.Count()</span>
+                            </div>
+                            <i class="bi bi-chevron-down group-toggle"></i>
+                        </div>
+                        <div class="collapse show permissions-items" id="group-@groupKey">
+                            @foreach (var item in group)
+                            {
+                                var i = item.Index;
+                                <div class="permission-item" data-permission-id="@Model.Permissions[i].PermissionId">
+                                    <div class="permission-info">
+                                        <div class="permission-name">@Model.Permissions[i].Key</div>
+                                        <div class="permission-description">@Model.Permissions[i].Description</div>
+                                    </div>
+                                    <div class="toggle-wrapper">
+                                        <label class="toggle-switch" for="permission-@i">
+                                            <input type="checkbox"
+                                                   id="permission-@i"
+                                                   asp-for="Permissions[i].Assigned"
+                                                   data-original="@Model.Permissions[i].Assigned.ToString().ToLower()"
+                                                   aria-label="Asignar permiso @Model.Permissions[i].Key" />
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-status @(Model.Permissions[i].Assigned ? "active" : "inactive")">
+                                            @(Model.Permissions[i].Assigned ? "Activo" : "Inactivo")
+                                        </span>
+                                        <input type="hidden" asp-for="Permissions[i].PermissionId" />
+                                        <input type="hidden" asp-for="Permissions[i].Key" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- Footer de Acciones -->
+        <div class="actions-footer">
+            <div class="changes-indicator hidden" id="changesIndicator">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span>Tienes cambios sin guardar</span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Sumar" class="btn btn-primary w-50" />
+            <div class="action-buttons">
+                <button type="button" class="btn-secondary-custom" onclick="window.history.back()">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </button>
+                <button type="submit" class="btn-primary-custom" id="saveBtn">
+                    <i class="bi bi-check-circle"></i> Guardar Cambios
+                </button>
             </div>
-        </form>
+        </div>
+    </form>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Guardando cambios...</p>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@functions {
+    // Función helper para asignar iconos según el grupo
+    string GetIconForGroup(string groupName)
+    {
+        return groupName.ToLower() switch
+        {
+            "users" or "usuarios" => "people-fill",
+            "roles" => "shield-fill-check",
+            "products" or "productos" => "box-seam",
+            "orders" or "pedidos" => "cart-fill",
+            "reports" or "reportes" => "graph-up",
+            "settings" or "configuracion" => "gear-fill",
+            "admin" or "administracion" => "key-fill",
+            "security" or "seguridad" => "lock-fill",
+            _ => "folder-fill"
+        };
+    }
+}
 
+<script>
+    // ========== Estado de la Aplicación ==========
+    const appState = {
+        originalValues: new Map(),
+        hasChanges: false,
+        changesCount: 0
+    };
+
+    // ========== Inicialización ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeApp();
+        setupEventListeners();
+        updateStatistics();
+    });
+
+    function initializeApp() {
+        // Guardar valores originales
+        document.querySelectorAll('input[type="checkbox"][id^="permission-"]').forEach(checkbox => {
+            appState.originalValues.set(checkbox.id, checkbox.checked);
+        });
+    }
+
+    function setupEventListeners() {
+        // Búsqueda en tiempo real
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', handleSearch);
+
+        // Selección masiva
+        document.getElementById('selectAllBtn').addEventListener('click', () => selectAll(true));
+        document.getElementById('deselectAllBtn').addEventListener('click', () => selectAll(false));
+
+        // Cambios en checkboxes
+        document.querySelectorAll('input[type="checkbox"][id^="permission-"]').forEach(checkbox => {
+            checkbox.addEventListener('change', handlePermissionChange);
+        });
+
+        // Prevenir pérdida de cambios
+        window.addEventListener('beforeunload', function(e) {
+            if (appState.hasChanges) {
+                e.preventDefault();
+                e.returnValue = '¿Estás seguro de que quieres salir? Hay cambios sin guardar.';
+            }
+        });
+
+        // Submit del formulario
+        document.getElementById('permissionsForm').addEventListener('submit', handleFormSubmit);
+
+        // Expandir/colapsar grupos
+        document.querySelectorAll('.group-header').forEach(header => {
+            header.addEventListener('click', function() {
+                this.classList.toggle('collapsed');
+            });
+        });
+    }
+
+    // ========== Búsqueda ==========
+    function handleSearch(e) {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        const permissionItems = document.querySelectorAll('.permission-item');
+        const groups = document.querySelectorAll('.permission-group');
+
+        if (searchTerm === '') {
+            // Mostrar todo
+            permissionItems.forEach(item => item.style.display = '');
+            groups.forEach(group => group.style.display = '');
+            return;
+        }
+
+        // Filtrar permisos
+        groups.forEach(group => {
+            const items = group.querySelectorAll('.permission-item');
+            let visibleCount = 0;
+
+            items.forEach(item => {
+                const name = item.querySelector('.permission-name').textContent.toLowerCase();
+                const description = item.querySelector('.permission-description').textContent.toLowerCase();
+
+                if (name.includes(searchTerm) || description.includes(searchTerm)) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Ocultar grupo si no tiene items visibles
+            group.style.display = visibleCount > 0 ? '' : 'none';
+        });
+    }
+
+    // ========== Selección Masiva ==========
+    function selectAll(checked) {
+        const visibleCheckboxes = Array.from(document.querySelectorAll('.permission-item'))
+            .filter(item => item.style.display !== 'none')
+            .map(item => item.querySelector('input[type="checkbox"]'));
+
+        visibleCheckboxes.forEach(checkbox => {
+            if (checkbox.checked !== checked) {
+                checkbox.checked = checked;
+                updateToggleStatus(checkbox);
+                checkForChanges(checkbox);
+            }
+        });
+
+        updateStatistics();
+        updateChangesIndicator();
+    }
+
+    // ========== Manejo de Cambios ==========
+    function handlePermissionChange(e) {
+        const checkbox = e.target;
+        updateToggleStatus(checkbox);
+        checkForChanges(checkbox);
+        updateStatistics();
+        updateChangesIndicator();
+    }
+
+    function updateToggleStatus(checkbox) {
+        const wrapper = checkbox.closest('.toggle-wrapper');
+        const statusSpan = wrapper.querySelector('.toggle-status');
+
+        if (checkbox.checked) {
+            statusSpan.textContent = 'Activo';
+            statusSpan.classList.remove('inactive');
+            statusSpan.classList.add('active');
+        } else {
+            statusSpan.textContent = 'Inactivo';
+            statusSpan.classList.remove('active');
+            statusSpan.classList.add('inactive');
+        }
+    }
+
+    function checkForChanges(checkbox) {
+        const originalValue = appState.originalValues.get(checkbox.id);
+        const currentValue = checkbox.checked;
+        const permissionItem = checkbox.closest('.permission-item');
+
+        if (originalValue !== currentValue) {
+            permissionItem.classList.add('changed');
+        } else {
+            permissionItem.classList.remove('changed');
+        }
+
+        // Contar cambios totales
+        appState.changesCount = document.querySelectorAll('.permission-item.changed').length;
+        appState.hasChanges = appState.changesCount > 0;
+    }
+
+    function updateChangesIndicator() {
+        const indicator = document.getElementById('changesIndicator');
+        const changesCountEl = document.getElementById('changesCount');
+
+        changesCountEl.textContent = appState.changesCount;
+
+        if (appState.hasChanges) {
+            indicator.classList.remove('hidden');
+        } else {
+            indicator.classList.add('hidden');
+        }
+    }
+
+    // ========== Estadísticas ==========
+    function updateStatistics() {
+        const allCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="permission-"]');
+        const assignedCount = Array.from(allCheckboxes).filter(cb => cb.checked).length;
+
+        document.getElementById('assignedCount').textContent = assignedCount;
+    }
+
+    // ========== Submit del Formulario ==========
+    function handleFormSubmit(e) {
+        if (!appState.hasChanges) {
+            e.preventDefault();
+            alert('No hay cambios para guardar.');
+            return;
+        }
+
+        const confirmMessage = `¿Está seguro de que desea guardar ${appState.changesCount} cambio(s) en los permisos?`;
+
+        if (!confirm(confirmMessage)) {
+            e.preventDefault();
+            return;
+        }
+
+        // Mostrar loading overlay
+        document.getElementById('loadingOverlay').classList.add('active');
+
+        // Deshabilitar el botón de guardar
+        document.getElementById('saveBtn').disabled = true;
+    }
+
+    // ========== Utilidades ==========
+    // Función para debug (remover en producción)
+    window.debugPermissions = function() {
+        console.log('Estado de la aplicación:', appState);
+        console.log('Permisos cambiados:', document.querySelectorAll('.permission-item.changed').length);
+    };
+</script>
