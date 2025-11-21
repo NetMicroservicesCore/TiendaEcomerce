@@ -132,9 +132,6 @@
             roleModal.show();
         });
 
-        // ===============================
-        // ENVÍO DEL FORMULARIO (JavaScript puro)
-        // ===============================
         roleForm.addEventListener("submit", async function (e) {
             e.preventDefault();
 
@@ -220,10 +217,13 @@
                   render: function (data) {
                     return `
                         <button class="btn btn-sm btn-primary" onclick="editar(${data})">
-                            Editar
+                            <i class="bi bi-highlighter"></i> Editar
                         </button>
                         <button class="btn btn-sm btn-danger" onclick="eliminar(${data})">
                             Eliminar
+                        </button>
+                        <button class="btn btn-sm btn-success" onclick="asignar($data))">
+                        <i class="bi bi-house-check"></i> Asignar
                         </button>
                         `;
                 },
