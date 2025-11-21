@@ -29,7 +29,7 @@
     </div>
     <!-- Contenedor de jTable -->
     <div id="RolesTableContainer" class="animate__animated animate__fadeIn">
-        <table id="productsTable" class="table table-responsive-lg table-striped " style="width:100%">
+        <table id="productsTable" class="table table-responsive-sm table-hover " style="width:100%">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -217,13 +217,13 @@
                   render: function (data) {
                     return `
                         <button class="btn btn-sm btn-primary" onclick="editar(${data})">
-                            <i class="bi bi-highlighter"></i> Editar
+                            <i class="bi bi-highlighter"></i> 
                         </button>
                         <button class="btn btn-sm btn-danger" onclick="eliminar(${data})">
-                            Eliminar
+                            <i class="bi bi-trash"></i>
                         </button>
                         <button class="btn btn-sm btn-success" onclick="asignar($data))">
-                        <i class="bi bi-house-check"></i> Asignar
+                        <i class="bi bi-house-check"></i> 
                         </button>
                         `;
                 },
